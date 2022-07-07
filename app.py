@@ -1,6 +1,5 @@
 import dash
 import dash_bootstrap_components as dbc
-from urllib.request import urlopen
 
 app = dash.Dash(
     __name__,
