@@ -1,13 +1,10 @@
 import base64
 import io
-import arff
 import dash
 from dash import dcc
 import dash_bootstrap_components as dbc
 from dash import html
-from dash.exceptions import PreventUpdate
 import pandas as pd
-import plotly.graph_objs as go
 import os
 from dash.dependencies import Input, Output, State
 import dash_auth

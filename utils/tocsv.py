@@ -1,5 +1,3 @@
-import pandas as pd
-from scipy.io import arff
 import os
 
 path_to_directory="data/"

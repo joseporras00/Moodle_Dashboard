@@ -1,21 +1,11 @@
 from gc import callbacks
-import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_table
 import dash_daq as daq
-from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.graph_objs as go
-import os
-import unicodedata
-import requests
-import json
-from bs4 import BeautifulSoup
-import re
-from urllib.request import urlopen
-import sqlite3
 from dash.dependencies import Input, Output, State
 from utils.helpers import *
 from utils.figures import *

@@ -1,12 +1,4 @@
 import pandas as pd
-import numpy as np
-import datetime as dt
-import base64
-import io
-import os
-import base64
-import seaborn as sn
-import matplotlib as plt
 import pandas as pd
 import plotly.express as px
 import dash_core_components as dcc
@@ -15,8 +7,6 @@ import dash_bootstrap_components as dbc
 import dash_daq as daq
 from data_reader import *
 from utils.modeling import *
-from urllib.parse import quote as urlquote
-from flask import Flask, send_from_directory
 from dash.dependencies import Input, Output, State, ClientsideFunction
 from dash import callback_context
 from app import app

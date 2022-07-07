@@ -1,10 +1,7 @@
 import lightgbm as lgb
-import pandas as pd
-import numpy as np
 import plotly.express as px
 import plotly.graph_objs as go
 from sklearn import tree
-import plotly.figure_factory as ff
 from sklearn.naive_bayes import GaussianNB
 from sklearn.datasets import make_classification
 from sklearn.linear_model import LogisticRegression
@@ -18,7 +15,6 @@ from sklearn.model_selection import GridSearchCV
 from utils.figures import *
 from data_reader import *
 import joblib
-from yellowbrick.classifier import ROCAUC
 from app import app
 
 modelo_exp=None
