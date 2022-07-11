@@ -11,6 +11,7 @@ from app import app
 from data_reader import *
 from utils.helpers import *
 from utils.figures import *
+import pages
 
 
 import pandas as pd
@@ -248,8 +249,17 @@ def update_matrix2(data):
     return corelationMatrix(df),featureImportance(df)
 
 
-
-
+@app.callback(
+    Output("page-content", "children"),
+    Output('upload-div', 'hidden'),    
+    Output("alert-auto", "children"),
+    Output("alert-auto", "is_open"),
+    [Input("stored-data", "data"),]
+)
+def errorData(data):
+    if data==None:
+        return pages.home.layout(), False, "No se han añadido los datos para realizarlas las funcionalidades, vuelve a la pantalla de inicio",True
+    
 
 
 

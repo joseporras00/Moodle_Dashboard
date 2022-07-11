@@ -70,13 +70,9 @@ def layout():
 
 @app.callback(
     Output("contenido", "children"),
-    Output("alert-auto", "children"),
-    Output("alert-auto", "is_open"),
     [Input("stored-data", "data")],
 )
 def update_tabla(data):
-    if data==None:
-        return [""], "No se han añadido los datos para realizarlas las funcionalidades, vuelve a la pantalla de inicio",True
     df=pd.DataFrame(data)
     return [html.H2("DataFrame Procesado"),
             html.Div(

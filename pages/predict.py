@@ -8,6 +8,7 @@ from dash.dependencies import Input, Output, State
 from app import app
 from data_reader import *
 from app import app
+import pages
 FONTSIZE = 20
 FONTCOLOR = '#F5FFFA'
 BGCOLOR ='#3445DB'
@@ -143,6 +144,3 @@ def display(btn,model,data):
                 
             ]
 
-
-if __name__ == "__main__":
-    app.run_server(debug=True)

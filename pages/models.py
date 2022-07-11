@@ -10,6 +10,7 @@ from utils.modeling import *
 from dash.dependencies import Input, Output, State, ClientsideFunction
 from dash import callback_context
 from app import app
+import pages
 
 server = app.server
 
@@ -209,3 +210,15 @@ def export_model(n):
         msg = 'Modelo exportado'
         exportar_modelo()
     return [html.Div(msg)]
+
+@app.callback(
+    Output("page-content", "children"),
+    Output('upload-div', 'hidden'),    
+    Output("alert-auto", "children"),
+    Output("alert-auto", "is_open"),
+    [Input("stored-data", "data"),]
+)
+def errorDataModels(data):
+    if data==None:
+        return pages.home.layout(), False, "No se han añadido los datos para realizarlas las funcionalidades, vuelve a la pantalla de inicio",True
+   
