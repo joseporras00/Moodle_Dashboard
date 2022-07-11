@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output, State
 from utils.helpers import *
 from utils.figures import *
 
-from app import app
+from app import *
 from data_reader import *
 FONTSIZE = 20
 FONTCOLOR = '#F5FFFA'
@@ -29,7 +29,7 @@ def layout():
                                     """
                                     Esta es una aplicación creada para estudiar los datos de las asignaturas en moodle y así ayudar a los profesores a predecir futuros resultados de sus alumnos. 
                                     Esta aplicación permite crear modelos predictivos y de clasificación para incluir la minería de datos en los nuevos entornos educativos.
-                                    """,
+                                    El código de esta aplicación está disponible en: https://github.com/joseporras00/Moodle_Dashboard""",
                                     style={"margin": "0 10px"},
                                 )
                             ]
@@ -70,10 +70,13 @@ def layout():
 
 @app.callback(
     Output("contenido", "children"),
-    #Output("contadores", "children"),
+    Output("alert-auto", "children"),
+    Output("alert-auto", "is_open"),
     [Input("stored-data", "data")],
 )
 def update_tabla(data):
+    if data==None:
+        return [""], "No se han añadido los datos para realizarlas las funcionalidades, vuelve a la pantalla de inicio",True
     df=pd.DataFrame(data)
     return [html.H2("DataFrame Procesado"),
             html.Div(
@@ -141,7 +144,7 @@ def update_tabla(data):
                             ),
                             ]
                         ),
-        ]
+        ],[""],False
     
 @app.callback(
     Output("pie-pass", "children"),

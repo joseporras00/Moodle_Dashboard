@@ -61,6 +61,13 @@ app.layout = dbc.Container(
                     ),
                 ]
             ),
+            dbc.Alert(
+                id="alert-auto",
+                is_open=False,
+                dismissable=True,
+                fade=True,
+                duration=4000,
+            ),
             dcc.Store(id='stored-data',data=None,storage_type='local'),
             #BODY
             html.Div(id='upload-div',
