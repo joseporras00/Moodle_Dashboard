@@ -13,7 +13,8 @@ import pages
 from data_reader import *
 
 VALID_USERNAME_PASSWORD_PAIRS = {
-    'josepo': 'admin'
+    'josepo': 'admin',
+    'cristobal': 'admin'
 }
 
 server = app.server
@@ -60,14 +61,7 @@ app.layout = dbc.Container(
                         style={"paddingLeft": "480px"}
                     ),
                 ]
-            ),
-            dbc.Alert(
-                id="alert-auto",
-                is_open=False,
-                dismissable=True,
-                fade=True,
-                duration=4000,
-            ),
+            ),            
             dcc.Store(id='stored-data',data=None,storage_type='local'),
             #BODY
             html.Div(id='upload-div',
@@ -95,6 +89,12 @@ app.layout = dbc.Container(
     
     ],
 )
+dbc.Alert("No se han añadido los datos para realizar las funcionalidades, vuelve a la pantalla de inicio",
+                id="alert-auto",
+                is_open=False,
+                dismissable=True,
+                fade=True,
+),
 
 @app.callback(Output('stored-data','data'),[
     Input('upload-data', 'contents'),

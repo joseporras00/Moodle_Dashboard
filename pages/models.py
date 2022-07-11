@@ -211,14 +211,4 @@ def export_model(n):
         exportar_modelo()
     return [html.Div(msg)]
 
-@app.callback(
-    Output("page-content", "children"),
-    Output('upload-div', 'hidden'),    
-    Output("alert-auto", "children"),
-    Output("alert-auto", "is_open"),
-    [Input("stored-data", "data"),]
-)
-def errorDataModels(data):
-    if data==None:
-        return pages.home.layout(), False, "No se han añadido los datos para realizarlas las funcionalidades, vuelve a la pantalla de inicio",True
-   
+
