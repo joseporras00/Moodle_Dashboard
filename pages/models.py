@@ -211,4 +211,3 @@ def export_model(n):
         exportar_modelo()
     return [html.Div(msg)]
 
-

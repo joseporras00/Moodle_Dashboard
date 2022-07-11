@@ -83,18 +83,18 @@ app.layout = dbc.Container(
                         multiple=False,
                     ),       
                 ]),
+                dbc.Alert(["No se han añadido los datos para realizar las funcionalidades, introducelos para continuar"],
+                                id="alert-auto",
+                                is_open=False,
+                                dismissable=True,
+                                fade=True,
+                ),
             html.Div(id="page-content"),
         ]
     ),
     
-    ],
+    ]
 )
-dbc.Alert("No se han añadido los datos para realizar las funcionalidades, vuelve a la pantalla de inicio",
-                id="alert-auto",
-                is_open=False,
-                dismissable=True,
-                fade=True,
-),
 
 @app.callback(Output('stored-data','data'),[
     Input('upload-data', 'contents'),
@@ -122,19 +122,22 @@ def update_data(contents, filename):
         return df.to_dict('records')
    
           
-@app.callback(Output("page-content", "children"),Output('upload-div', 'hidden'), [Input("url", "pathname")])
-def display_page_content(pathname):
+@app.callback(Output("page-content", "children"),Output('upload-div', 'hidden'),Output("alert-auto", "is_open"), [Input("url", "pathname"),Input('stored-data','data')])
+def display_page_content(pathname,data):
         path = app.strip_relative_path(pathname)
-        if not path:
-            return pages.home.layout(), False
-        elif path == "upload":
-            return pages.upload.layout(), True
-        elif path == "train":
-            return pages.models.layout(), True 
-        elif path == "predict":
-            return pages.predict.layout(), True 
+        if data!=None:
+            if not path:
+                return pages.home.layout(), False, False
+            elif path == "upload":
+                return pages.upload.layout(), True, False
+            elif path == "train":
+                return pages.models.layout(), True , False
+            elif path == "predict":
+                return pages.predict.layout(), True, False
+            else:
+                return "404"
         else:
-            return "404"
+            return pages.home.layout(), False, True
 
 
 if __name__ == "__main__":

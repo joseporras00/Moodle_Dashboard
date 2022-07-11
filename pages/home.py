@@ -140,7 +140,7 @@ def update_tabla(data):
                             ),
                             ]
                         ),
-        ],[""],False
+        ]
     
 @app.callback(
     Output("pie-pass", "children"),

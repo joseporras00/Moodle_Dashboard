@@ -12,7 +12,6 @@ from data_reader import *
 from utils.helpers import *
 from utils.figures import *
 import pages
-from index import *
 
 
 import pandas as pd
@@ -250,13 +249,6 @@ def update_matrix2(data):
     return corelationMatrix(df),featureImportance(df)
 
 
-@app.callback(
-    Output("alert-auto", "is_open"),
-   [Input("stored-data", "data"),]
-)
-def errorData(data):
-    if data==None:
-        return True
     
 
 
