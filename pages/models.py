@@ -9,6 +9,9 @@ from data_reader import *
 from utils.modeling import *
 from dash.dependencies import Input, Output, State, ClientsideFunction
 from dash import callback_context
+import json
+from utils import modeling
+
 from app import app
 import pages
 
@@ -22,7 +25,7 @@ BGCOLOR ='#3445DB'
 
 def layout():
     return[
-            dcc.Store(id='stored-model',data=None,storage_type='local'),
+            dcc.Store(id='stored-model',data=None,storage_type='memory'),
             html.Div(id='slider-output-container'),
             html.Br(),
             daq.Slider(
@@ -133,7 +136,14 @@ def layout():
             ), 
             html.Br(),
             html.Button('Export model', id='exp_button', n_clicks=0),
-            html.Div(id='container-button-timestamp'),
+            dcc.Download(id="download-model"),
+            dbc.Alert(["Modelo exportado"],
+                                id="alert-modelo",
+                                is_open=False,
+                                dismissable=True,
+                                fade=True,
+                                duration=3000,
+            ),
             html.Br(),
 #--------------------------------------------------------------------------------------------
             html.H5('Precission'),
@@ -178,7 +188,7 @@ def layout():
         Output('id-daq-switch-model', 'on'),
         Output('main_graph', 'figure'),
         Output('conf_matrix', 'figure'), 
-        Output('report-div', 'children'), 
+        Output('report-div', 'children'),
    ],
    [
        Input('stored-data', 'data'),
@@ -196,18 +206,12 @@ def measurePerformance(data, target, independent, slider,splits, selected_models
     return precision, recall, accuracy,f1,True, fig1,fig2, reporte
 
 @app.callback(
-    [
-        Output('container-button-timestamp', 'children'),
-   ],
-   [
-       Input('exp_button', ', n_clicks'),
-   ]
+        Output("download-model", "data"),
+        Output('alert-modelo', 'is_open'),
+        [Input('exp_button', ', n_clicks')],
+        prevent_initial_call=True,
 )
-def export_model(n):
-    msg = 'Aun no se ha exportado un modelo'
-    changed_id = [p['prop_id'] for p in callback_context.triggered][0]
-    if 'exp_button' in changed_id:
-        msg = 'Modelo exportado'
-        exportar_modelo()
-    return [html.Div(msg)]
+def export_model(n):     
+    joblib.dump(modeling.exportar_modelo, open('assets/my_model.joblib', 'wb'))
+    return dcc.send_file('./assets/my_model.joblib'),True
 

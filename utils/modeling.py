@@ -1,3 +1,4 @@
+import json
 import lightgbm as lgb
 import plotly.express as px
 import plotly.graph_objs as go
@@ -17,7 +18,7 @@ from data_reader import *
 import joblib
 from app import app
 
-modelo_exp=None
+global modelo_exp
 
 def make_gridSearch(model,X,y,splits):
     param_grid={}
@@ -115,9 +116,7 @@ def buildModel(df, y_v, X_v,slider,splits, model):
                         ),
                        )
                 
-        
         modelo_exp=model
-        exportar_modelo(model)
         
         reporte=classification_report(testy, yhat,target_names=['FAIL', 'PASS', 'GOOD', 'EXCELLENT'])
         
@@ -127,6 +126,6 @@ def buildModel(df, y_v, X_v,slider,splits, model):
         return precision, recall, accuracy, f1, fig_precision, fig_m, reporte
     
     
-def exportar_modelo(model):
-    joblib.dump(model, open('data/my_model.joblib', 'wb'))
+def exportar_modelo():
+    return modelo_exp
            

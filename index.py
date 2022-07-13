@@ -122,7 +122,9 @@ def update_data(contents, filename):
         return df.to_dict('records')
    
           
-@app.callback(Output("page-content", "children"),Output('upload-div', 'hidden'),Output("alert-auto", "is_open"), [Input("url", "pathname"),Input('stored-data','data')])
+@app.callback(Output("page-content", "children"),Output('upload-div', 'hidden'),Output("alert-auto", "is_open"), [Input("url", "pathname"),Input('stored-data','data')],
+              prevent_initial_call=True
+)
 def display_page_content(pathname,data):
         path = app.strip_relative_path(pathname)
         if data!=None:
