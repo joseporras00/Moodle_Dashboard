@@ -205,13 +205,12 @@ def measurePerformance(data, target, independent, slider,splits, selected_models
 
     return precision, recall, accuracy,f1,True, fig1,fig2, reporte
 
-@app.callback(
-        Output("download-model", "data"),
-        Output('alert-modelo', 'is_open'),
-        [Input('exp_button', ', n_clicks')],
-        prevent_initial_call=True,
-)
-def export_model(n):     
-    joblib.dump(modeling.exportar_modelo, open('assets/my_model.joblib', 'wb'))
-    return dcc.send_file('./assets/my_model.joblib'),True
+#@app.callback(
+#        Output("download-model", "data"),
+#        Output('alert-modelo', 'is_open'),
+#        [Input('exp_button', ', n_clicks')],
+#        prevent_initial_call=True,
+#)
+#def export_model(n):     
+#    return dcc.send_file('./assets/my_model.joblib'),True
 

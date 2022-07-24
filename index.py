@@ -31,37 +31,45 @@ app.layout = dbc.Container(
             dbc.Navbar(
                 children=[
                     html.A(
-                        # Use row and col to control vertical alignment of logo / brand
                         dbc.Row(
                             [
-                                dbc.Col(
-                                    html.Img(
-                                        src=app.get_asset_url("logo.png"), height="30px"
+                            dbc.Col(
+                                html.Img(
+                                    src=app.get_asset_url("logo.png"), height="30px"
                                     )
                                 ),
-                                dbc.Col(
-                                    dbc.NavbarBrand(
-                                        "Moodle Dashboard", className="ml-2"
-                                    )
-                                ),
-                            ],                                               
-                            className="ml-auto flex-nowrap mt-3 mt-md-0",
+                            dbc.Col(
+                                dbc.NavbarBrand(
+                                    "Moodle Dashboard", className="ms-2"
+                                )
+                            ),
+                            ],                                                                     
+                            className="g-0 ml-auto flex-nowrap mt-3 mt-md-0",
                             align="center",
                         ),
                         href=app.get_relative_path("/"),
                     ),
                     dbc.Row(
-                        children=[
-                            
-                            dbc.Col(dbc.NavLink("Upload", href=app.get_relative_path("/upload"))),
-                            dbc.Col(dbc.NavLink("Train models", href=app.get_relative_path("/train"))),
-                            dbc.Col(dbc.NavLink("Predict", href=app.get_relative_path("/predict"))),
+                        [
+                        dbc.Collapse(
+                            dbc.Nav(
+                                [
+                                    dbc.NavItem(dbc.NavLink("Home", href=app.get_relative_path("/"))),
+                                    dbc.NavItem(dbc.NavLink("Upload", href=app.get_relative_path("/upload"))),
+                                    dbc.NavItem(dbc.NavLink("Train models", href=app.get_relative_path("/train"))),
+                                    dbc.NavItem(dbc.NavLink("Predict", href=app.get_relative_path("/predict"))),
+                                ],
+                                pills="exact",
+                                className="w-100",
+                            ),
+                            navbar=True,
+                        ),
                         ],
-                        className="6-columns",
-                        style={"paddingLeft": "480px"}
-                    ),
-                ]
-            ),            
+                        className="flex-grow-1",
+                    ),  
+                ],
+                
+            ),
             dcc.Store(id='stored-data',data=None,storage_type='local'),
             #BODY
             html.Div(id='upload-div',

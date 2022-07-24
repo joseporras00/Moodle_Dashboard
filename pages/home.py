@@ -36,34 +36,40 @@ def layout():
                         ),
                     ]
                 ),
-                html.H2("DataFrame sin Procesar"),
-                html.Div(
-                    dash_table.DataTable(data=df_prueba.to_dict('records'), 
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.H2("DataFrame sin Procesar"),
+                            ]
+                        ),
+                    ]
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    dash_table.DataTable(data=df_prueba.to_dict('records'), 
                                          columns=[{"name": i, "id": i} for i in df_prueba.columns],
-                                         editable=True,
+                                        style_table={'minWidth': '100%'},
                                         filter_action='native',
                                         sort_action='native',
                                         sort_mode='multi',
                                         column_selectable='single',
                                         row_selectable='multi',
-                                        row_deletable=True,
                                         selected_columns=[],
                                         selected_rows=[],
                                         page_action='native',
                                         page_current= 0,
                                         page_size= 20,
-                    ),title='DataFrame Sin Procesar'
+                                    ),title='DataFrame Sin Procesar'
+                                ),
+                            ]
+                        ),
+                    ]
                 ),
-                html.Div(id='contenido'),                
-                #html.Div(id='contadores'),                
-                html.Div(id='pie_pass'),
-                #dcc.Graph(id='heatmap-graph'),#, figure = create_heatmap(df_moodle_p)),
-                #dcc.Graph(id='bar-graph'),#, figure = serve_bar(df_moodle)),
-                #dcc.Graph(id='roc-graph'),#, figure = serve_roc_curve(df_moodle_p)),
-                #dcc.Graph(id='conf-matrix-graph-svc'),#, figure = serve_pie_confusion_matrix_svc(df_moodle_p)),
-                #dcc.Graph(id='conf-matrix-graph-2'),#, figure = serve_pie_confusion_matrix_GB(df_moodle_p)),
-                #dcc.Graph(id='conf-matrix-graph-3'),#, figure = serve_pie_confusion_matrix_rf(df_moodle_p)),
-                #dcc.Graph(id='conf-matrix-graph-4'),#, figure = serve_pie_confusion_matrix_logr(df_moodle_p)),
+                dbc.Row([html.Div(id='contenido'),]),
             ],                
         )
     ]
@@ -78,19 +84,18 @@ def update_tabla(data):
             html.Div(
                 dash_table.DataTable(data=df.to_dict('rows'), 
                                          columns=[{"name": i, "id": i} for i in df.columns],
-                                         editable=True,
+                                         style_table={'minWidth': '100%'},
                                         filter_action='native',
                                         sort_action='native',
                                         sort_mode='multi',
                                         column_selectable='single',
                                         row_selectable='multi',
-                                        row_deletable=True,
                                         selected_columns=[],
                                         selected_rows=[],
                                         page_action='native',
                                         page_current= 0,
                                         page_size= 20,
-                    ),title='DataFrame Sin Procesar'
+                    ),title='DataFrame Sin Procesar',
             ),            
             dbc.Row(
                             [
@@ -108,7 +113,6 @@ def update_tabla(data):
                             dbc.Col(
                                 daq.LEDDisplay(
                                     id='variables',
-                                   #label='Default',
                                     value=str(df.shape[1]),
                                     label = 'variables',
                                     size=FONTSIZE,
@@ -119,7 +123,6 @@ def update_tabla(data):
                             dbc.Col(
                                 daq.LEDDisplay(
                                     id='numeric',
-                                   #label='Default',
                                     value=str(len([i for i in list(df.columns) if df.dtypes[i] in ['float64','int64']])),
                                     label = 'numeric',
                                     size=FONTSIZE,
@@ -130,7 +133,6 @@ def update_tabla(data):
                             dbc.Col(
                                 daq.LEDDisplay(
                                     id='categorical',
-                                    #label='Default',
                                     value=str(len([i for i in list(df.columns) if df.dtypes[i] in ['object']])),
                                     label = 'categorical',
                                     size=FONTSIZE,
@@ -142,92 +144,3 @@ def update_tabla(data):
                         ),
         ]
     
-@app.callback(
-    Output("pie-pass", "children"),
-    [Input("stored-data", "data")],
-)
-def update_pie(data):
-    if(data!=None):
-        df=pd.DataFrame(data)
-        col_label = "mark"
-        col_values = "Count"
-        v = df[col_label].value_counts()
-        new2 = pd.DataFrame({
-            col_label: v.index,
-            col_values: v.values
-            })
-
-        fig = go.figure = {
-                "data": [
-                    {
-                    "labels":new2['mark'],
-                    "values":new2['Count'],
-                    "hoverinfo":"label+percent",
-                    "hole": .7,
-                    "type": "pie",
-                    'marker': {'colors': [
-                        '#0052cc',  
-                        '#3385ff',
-                        '#99c2ff',
-                        '#0567ff'
-                        ]
-                        },
-                    "showlegend": True
-                }],
-                "layout": {
-                    "title" : dict(text ="Distribución notas",
-                            font =dict(
-                                size=20,
-                                color = 'white')),
-                    "paper_bgcolor":"#111111",
-                    "showlegend":True,
-                    'height':600,
-                    'marker': {'colors': [
-                                '#0052cc',  
-                                '#3385ff',
-                                '#99c2ff',
-                                '#0567ff'
-                                ]
-                            },
-                    "annotations": [
-                        {
-                        "font": {
-                            "size": 20
-                        },
-                        "showarrow": False,
-                        "text": "",
-                        "x": 0.2,
-                        "y": 0.2
-                        }
-                    ],
-                    "showlegend": True,
-                    "legend":dict(fontColor="white",tickfont={'color':'white' }),
-                    "legenditem": {
-                        "textfont": {
-                            'color':'white'
-                        }
-                    }
-                } }
-        #dcc.Graph(figure=fig),
-        return [px.bar(data_frame=df,
-                       x=new2['mark'],
-                       y=new2['Count'],
-                       title='n_q_a by student'
-                       ),
-                ]
-    
-"""@app.callback(
-    Output("heatmap-graph", "figure"),
-    #Output("roc-graph", "figure"),
-    #Output("bar-graph", "figure"),
-    #Output("conf-matrix-graph-svc", "figure"),
-    #Output("conf-matrix-graph-2", "figure"),
-    #Output("conf-matrix-graph-3", "figure"),
-    #Output("conf-matrix-graph-4", "figure"),
-    [Input("stored-data", "data")],
-)
-def update_graphs(data):
-    if(data!=None):
-        df=pd.DataFrame(data)
-        return create_heatmap(df)#, serve_roc_curve(df), serve_bar(df), serve_pie_confusion_matrix_svc(df), serve_pie_confusion_matrix_rf(df),\
-                #serve_pie_confusion_matrix_GB(df), serve_pie_confusion_matrix_logr(df)"""

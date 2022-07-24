@@ -9,7 +9,7 @@
 @attribute total_time_assignment real
 @attribute total_time_quiz real
 @attribute total_time_forum real
-@attribute mark{FAIL,PASS,GOOD,EXCELLENT}
+@attribute mark
 @data
 88,6,0,0,0,0,0,1872,0,404,FAIL
 88,7,0,0,0,0,0,2163,0,0,FAIL

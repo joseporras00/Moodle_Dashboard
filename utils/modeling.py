@@ -117,6 +117,7 @@ def buildModel(df, y_v, X_v,slider,splits, model):
                        )
                 
         modelo_exp=model
+        exportar_modelo(model)
         
         reporte=classification_report(testy, yhat,target_names=['FAIL', 'PASS', 'GOOD', 'EXCELLENT'])
         
@@ -126,6 +127,6 @@ def buildModel(df, y_v, X_v,slider,splits, model):
         return precision, recall, accuracy, f1, fig_precision, fig_m, reporte
     
     
-def exportar_modelo():
-    return modelo_exp
+def exportar_modelo(model):
+    joblib.dump(model, open('./assets/my_model.joblib', 'wb'))
            

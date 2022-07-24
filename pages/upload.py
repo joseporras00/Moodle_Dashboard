@@ -94,7 +94,6 @@ def layout():
                     dcc.Graph(id="Mygraph"),
                 ]),              
                 
-                #dcc.Graph(id='piechart'),
                 html.H5('Elige una variable'),
                 dcc.Dropdown(id='variable-dropdown',
                     multi=False,

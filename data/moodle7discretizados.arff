@@ -1,15 +1,15 @@
 @relation student_summarization
-@attribute course{88,29,110,111,46,94,218}
-@attribute n_assignment{LOW,MEDIUM,HIGH}
-@attribute n_posts{LOW,MEDIUM,HIGH}
-@attribute n_read{LOW,MEDIUM,HIGH}
-@attribute n_quiz{LOW,MEDIUM,HIGH}
-@attribute n_quiz_a{LOW,MEDIUM,HIGH}
-@attribute n_quiz_s{LOW,MEDIUM,HIGH}
-@attribute total_time_assignment{LOW,MEDIUM,HIGH}
-@attribute total_time_quiz{LOW,MEDIUM,HIGH}
-@attribute total_time_forum{LOW,MEDIUM,HIGH}
-@attribute mark{FAIL,PASS,GOOD,EXCELLENT}
+@attribute course
+@attribute n_assignment
+@attribute n_posts
+@attribute n_read
+@attribute n_quiz
+@attribute n_quiz_a
+@attribute n_quiz_s
+@attribute total_time_assignment
+@attribute total_time_quiz
+@attribute total_time_forum
+@attribute mark
 @data
 88,MEDIUM,LOW,LOW,LOW,LOW,LOW,MEDIUM,LOW,LOW,FAIL
 88,MEDIUM,LOW,LOW,LOW,LOW,LOW,MEDIUM,LOW,LOW,FAIL
