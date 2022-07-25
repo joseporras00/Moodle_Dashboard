@@ -102,7 +102,6 @@ def update_tabla(data):
                             dbc.Col(
                                 daq.LEDDisplay(
                                     id='records',
-                                    #label='Default',
                                     value=str(df.shape[0]),
                                     label = 'Records',
                                     size=FONTSIZE,

@@ -18,8 +18,6 @@ from data_reader import *
 import joblib
 from app import app
 
-global modelo_exp
-
 def make_gridSearch(model,X,y,splits):
     param_grid={}
     if model == 'GNB':
@@ -70,7 +68,8 @@ def make_gridSearch(model,X,y,splits):
     
     return final_model
 
-def buildModel(df, y_v, X_v,slider,splits, model):
+def buildModel(df2, y_v, X_v,slider,splits, model):
+        df=df2.copy()
         df=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
         X=df[X_v]
         y=df[y_v]  
@@ -116,14 +115,11 @@ def buildModel(df, y_v, X_v,slider,splits, model):
                         ),
                        )
                 
-        modelo_exp=model
+        
         exportar_modelo(model)
         
         reporte=classification_report(testy, yhat,target_names=['FAIL', 'PASS', 'GOOD', 'EXCELLENT'])
-        
-        #fig_roc = ROCAUC(model, classes=["FAIL", "PASS", "GOOD", "EXCELLENT"])
-        #fig_roc.score(testX,testy)
-        
+                
         return precision, recall, accuracy, f1, fig_precision, fig_m, reporte
     
     

@@ -6,6 +6,7 @@ import dash
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 import dash_table
 from app import app
 from data_reader import *
@@ -82,44 +83,53 @@ def layout():
     return [
         html.Div(
             [   
-                html.Div(id="output-data-upload"),
-                html.Div([
-                    html.H5('Elige el curso deseado'),
-                    dcc.Dropdown(id='course-dropdown',
-                        multi=False,
-                        clearable=True,
-                        value=None,
-                    ),     
-                       
-                    dcc.Graph(id="Mygraph"),
-                ]),              
+                dbc.Row([
+                    html.Div(id="output-data-upload"),
+                ]),
+                dbc.Row([
+                    dbc.Col([
+                         html.Div([
+                            html.H5('Elige el curso deseado'),
+                            dcc.Dropdown(id='course-dropdown',
+                                multi=False,
+                                clearable=True,
+                                value=None,
+                            ),                                 
+                            dcc.Graph(id="Mygraph"),
+                        ]),
+                    ]),              
+                    dbc.Col([
+                        html.H5('Elige una variable'),
+                        dcc.Dropdown(id='variable-dropdown',
+                            multi=False,
+                            clearable=False,
+                            options=['n_assignment','n_posts','n_read','n_quiz','n_quiz_a','n_quiz_s','total_time_assignment','total_time_quiz','total_time_forum'],
+                            value="n_posts",
+                        ), 
+                        dcc.Graph(id="pie2"),
+                    ]),
+                ]),            
+                               
+                dbc.Row([
+                    html.Div([
+                        html.H5("Scatter Matrix:"),
+                        dcc.Graph(id='matrix'),
+                    ]),
+                ]),
                 
-                html.H5('Elige una variable'),
-                dcc.Dropdown(id='variable-dropdown',
-                    multi=False,
-                    clearable=False,
-                    options=['n_assignment','n_posts','n_read','n_quiz','n_quiz_a','n_quiz_s','total_time_assignment','total_time_quiz','total_time_forum'],
-                    value="n_posts",
-                ), 
-                html.Div([
-                    html.H5("Bar Chart:"),
-                    dcc.Graph(id="barchart"),
-                ],className='row'),
+                dbc.Row([
+                    html.Div([
+                        html.H5("Correlation Matrix:"),
+                        dcc.Graph(id='matrix2'),
+                    ]),
+                ]),
                 
-                html.Div([
-                    html.H5("Scatter Matrix:"),
-                    dcc.Graph(id='matrix'),
-                ],className='row'),
-                
-                html.Div([
-                    html.H5("Correlation Matrix:"),
-                    dcc.Graph(id='matrix2'),
-                ],className='row'),
-                
-                html.Div([
-                    html.H5("Features:"),
-                    dcc.Graph(id='feature_graph'),
-                ],className='row'),
+                dbc.Row([
+                    html.Div([
+                        html.H5("Features:"),
+                        dcc.Graph(id='feature_graph'),
+                    ]),
+                ]),
                      
             ]
         )
@@ -195,7 +205,7 @@ def update_optcourse(data):
     return [{'label':x, 'value':x} for x in sorted(df['course'].unique())]
 
 @app.callback(
-    Output("barchart", "figure"),
+    Output("pie2", "figure"),
     [Input("stored-data", "data"),
     Input('course-dropdown', 'value'),
     Input('variable-dropdown', 'value'),],

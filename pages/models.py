@@ -25,7 +25,6 @@ BGCOLOR ='#3445DB'
 
 def layout():
     return[
-            dcc.Store(id='stored-model',data=None,storage_type='memory'),
             html.Div(id='slider-output-container'),
             html.Br(),
             daq.Slider(
@@ -71,15 +70,6 @@ def layout():
                 clearable=False,
                 className='dcc_control',
             ),
-            html.Br(),
-            html.H5('Comenzar el modelado'),
-            daq.PowerButton(
-                id = 'id-daq-switch-model',
-                on='False',
-                color='#1ABC9C', 
-                size = 75,
-                label='Comenzar'
-            ),
 #--------------------------------------------------------------------------------------------------------------------
             html.Br(),
             dbc.Row(
@@ -87,7 +77,6 @@ def layout():
                 dbc.Col(
                     daq.LEDDisplay(
                         id='precision',
-                        #label='Default',
                         value=0,
                         label = 'Precision',
                         size=FONTSIZE,
@@ -98,7 +87,6 @@ def layout():
                 dbc.Col(
                     daq.LEDDisplay(
                         id='recall',
-                        #label='Default',
                         value=0,
                         label = 'Recall',
                         size=FONTSIZE,
@@ -110,7 +98,6 @@ def layout():
                     [
                     daq.LEDDisplay(
                         id='accuracy',
-                        #label='Default',
                         value=0,
                         label = 'Accuracy',
                         size=FONTSIZE,
@@ -123,7 +110,6 @@ def layout():
                     [
                     daq.LEDDisplay(
                         id='f1',
-                        #label='Default',
                         value= 0,
                         label = 'F1',
                         size=FONTSIZE,
@@ -133,16 +119,6 @@ def layout():
                     ]
                 )
                 ]
-            ), 
-            html.Br(),
-            html.Button('Export model', id='exp_button', n_clicks=0),
-            dcc.Download(id="download-model"),
-            dbc.Alert(["Modelo exportado"],
-                                id="alert-modelo",
-                                is_open=False,
-                                dismissable=True,
-                                fade=True,
-                                duration=3000,
             ),
             html.Br(),
 #--------------------------------------------------------------------------------------------
@@ -159,23 +135,11 @@ def layout():
             ),
             html.Br(),
             dbc.CardHeader("Report"),
-                        dbc.CardBody(
-                            [
-                                html.Pre(id='report-div',   
-                                )
-                            ]
-                        ),
-            #html.H5('Roc curve'),
-            #html.Div(
-            #    [dcc.Graph(id='roc_curve')],
-            #    className='pretty_container six columns',
-            #),
-            #html.H5('Pie Confussion Matrix'),
-            #html.Div(
-            #    [dcc.Graph(id='pie_conf_matrix')],
-            #    className='pretty_container six columns',
-            #),
-            
+                dbc.CardBody(
+                    [
+                        html.Pre(id='report-div',)
+                    ]
+                ),            
     ]
     
     
@@ -205,12 +169,5 @@ def measurePerformance(data, target, independent, slider,splits, selected_models
 
     return precision, recall, accuracy,f1,True, fig1,fig2, reporte
 
-#@app.callback(
-#        Output("download-model", "data"),
-#        Output('alert-modelo', 'is_open'),
-#        [Input('exp_button', ', n_clicks')],
-#        prevent_initial_call=True,
-#)
-#def export_model(n):     
-#    return dcc.send_file('./assets/my_model.joblib'),True
+
 
