@@ -149,13 +149,12 @@ def layout():
         Output('recall', 'value'),
         Output('accuracy', 'value'),
         Output('f1', 'value'),
-        Output('id-daq-switch-model', 'on'),
         Output('main_graph', 'figure'),
         Output('conf_matrix', 'figure'), 
         Output('report-div', 'children'),
    ],
    [
-       Input('stored-data', 'data'),
+       State('stored-data', 'data'),
        Input('select_target', 'value'),
        Input('select_independent', 'value'),
        Input('slider', 'value'),
@@ -164,10 +163,11 @@ def layout():
    ]
 )
 def measurePerformance(data, target, independent, slider,splits, selected_models):
+    #df= pd.read_csv('./assets/data.csv',header=0).copy()
     df=pd.DataFrame(data)
     precision, recall, accuracy, f1, fig1, fig2, reporte  = buildModel(df,target,independent, slider,splits, selected_models)
 
-    return precision, recall, accuracy,f1,True, fig1,fig2, reporte
+    return precision, recall, accuracy,f1, fig1,fig2, reporte
 
 
 

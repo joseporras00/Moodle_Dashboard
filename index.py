@@ -1,4 +1,5 @@
 import base64
+from genericpath import exists
 import io
 import dash
 from dash import dcc
@@ -7,6 +8,7 @@ from dash import html
 import pandas as pd
 import os
 from dash.dependencies import Input, Output, State
+from scipy.io.arff import loadarff
 import dash_auth
 from app import app
 import pages
@@ -35,7 +37,7 @@ app.layout = dbc.Container(
                             [
                             dbc.Col(
                                 html.Img(
-                                    src=app.get_asset_url("logo.png"), height="30px"
+                                    src=app.get_asset_url("logo_moodle.png"), height="80px"
                                     )
                                 ),
                             dbc.Col(
@@ -53,16 +55,18 @@ app.layout = dbc.Container(
                         [
                         dbc.Collapse(
                             dbc.Nav(
-                                [
+                                [                                    
                                     dbc.NavItem(dbc.NavLink("Home", href=app.get_relative_path("/"))),
                                     dbc.NavItem(dbc.NavLink("Upload", href=app.get_relative_path("/upload"))),
                                     dbc.NavItem(dbc.NavLink("Train models", href=app.get_relative_path("/train"))),
                                     dbc.NavItem(dbc.NavLink("Predict", href=app.get_relative_path("/predict"))),
                                 ],
-                                pills="exact",
                                 className="w-100",
+                                fill=True,
+                                horizontal='end'
                             ),
                             navbar=True,
+                            is_open=True,
                         ),
                         ],
                         className="flex-grow-1",
@@ -127,6 +131,7 @@ def update_data(contents, filename):
             print(e)
             return html.Div(["There was an error processing this file."])  
         
+        
         return df.to_dict('records')
    
           
@@ -147,6 +152,7 @@ def display_page_content(pathname,data):
             else:
                 return "404"
         else:
+            path=app.get_relative_path("/")
             return pages.home.layout(), False, True
 
 

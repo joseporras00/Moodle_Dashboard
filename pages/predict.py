@@ -5,6 +5,8 @@ from dash import dcc
 from dash import html
 import pandas as pd
 from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
+from scipy.io.arff import loadarff
 from app import app
 from data_reader import *
 import dash_table
@@ -19,6 +21,7 @@ def layout():
     return [html.Div(
         [          
             dcc.Store(id='stored-predictData',data=None,storage_type='local'),
+            dcc.Store(id='predicted_table',data=None,storage_type='local'),
             #BODY
             html.Div(id='upload-data',
                 children=[
@@ -57,9 +60,18 @@ def layout():
                 id='separator',
             ),
             html.Br(),
-            html.Button('Start prediction', id='button', n_clicks=0),
             html.Div(id="predict-content"),
-        ]
+            html.Div(id='download-btn',
+                     children=[dbc.Button(id='btn',
+                        children=[html.I(className="fa fa-download mr-1"), "Download"],
+                        color="info",
+                        className="mt-1"
+                        ),
+                    ],
+                    hidden=True,
+            ),
+            dcc.Download(id="download-component"),
+            ]
     ),
     ]
     
@@ -92,10 +104,12 @@ def update_data(contents, filename):
           
 @app.callback(
     Output("predict-content", "children"),
-    [Input("button", "n_clicks"),
-    Input('stored-predictData','data'),]  
+    Output("predicted_table", "data"),
+    Output("download-btn", "hidden"),
+    [Input('stored-predictData','data'),],
+    prevent_initial_call=True
 )
-def display(btn,data):
+def display(data):
     if data!=None:
         df=pd.DataFrame(data)
         df_1=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
@@ -104,12 +118,12 @@ def display(btn,data):
         predictions=model.predict(df_2)
         df_pred = pd.DataFrame (predictions, columns = ['predicted'])
         df_merged = pd.concat([df, df_pred], axis=1, join='inner')
-        #df.merge(predictions)
         return [html.H2("Predictions"),
                 html.Div(
-                    dash_table.DataTable(data=df_merged.to_dict('rows'), 
+                    dash_table.DataTable(data=df_merged.to_dict('records'), 
                                             columns=[{"name": i, "id": i} for i in df_merged.columns],
                                             editable=False,
+                                            style_table={'overflowX': 'scroll'},
                                             filter_action='native',
                                             sort_action='native',
                                             sort_mode='multi',
@@ -119,8 +133,23 @@ def display(btn,data):
                                             page_action='native',
                                             page_current= 0,
                                             page_size= 20,
+                                            style_data_conditional=[        
+                                                {'if': {'row_index': 'odd'},
+                                                'backgroundColor': 'rgb(248, 248, 248)'}
+                                            ],
                         ),
                 ),            
                 
-            ]
+            ],df_merged.to_dict('records'),False
 
+@app.callback(
+    Output("download-component", "data"),
+    Input("btn", "n_clicks"),
+    State("predicted_table", "data"),
+    prevent_initial_call=True,
+)
+def func(n_clicks,data):
+    if data!=None:
+        df=pd.DataFrame(data).copy()
+        return dcc.send_data_frame(df.to_csv, "predicted_data.csv")
+    

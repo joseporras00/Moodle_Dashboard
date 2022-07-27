@@ -29,7 +29,7 @@ def read_data(archivo):
 def preprocess_data(df):
     df2=df.copy()
     df2=df2.replace({'PASS': 1, 'FAIL':0})
-    df2=df2.drop(['student_id', 'course'], axis=1)    
+    df2=df2.drop(['course'], axis=1)    
     return df2
 
 df_moodle=(read_data('data/MoodleSummary.csv'))

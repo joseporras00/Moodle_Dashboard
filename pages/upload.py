@@ -34,10 +34,10 @@ def makepie(labels,values,texto):
                 "hole": .7,
                 "type": "pie",
                 'marker': {'colors': [
-                    '#0052cc',  
-                    '#3385ff',
-                    '#99c2ff',
-                    '#0567ff'
+                    '#FB9C34',  
+                    '#F48E2C',
+                    '#F47C2B',
+                    '#EC7C2C'
                     ]
                     },
                 "showlegend": True
@@ -46,15 +46,15 @@ def makepie(labels,values,texto):
                 "title" : dict(text =texto,
                           font =dict(
                                size=20,
-                               color = 'white')),
-                "paper_bgcolor":"#111111",
+                               color = 'black')),
+                "paper_bgcolor":"#white",
                 "showlegend":True,
-                'height':600,
+                'height':500,
                 'marker': {'colors': [
-                            '#0052cc',  
-                            '#3385ff',
-                            '#99c2ff',
-                            '#0567ff'
+                            '#FB9C34',  
+                            '#8C5C44',
+                            '#F47C2B',
+                            '#EC7C2C'
                             ]
                         },
                 "annotations": [
@@ -177,20 +177,22 @@ def update_table(data):
             dash_table.DataTable(
                 data=df.to_dict('rows'), 
                 columns=[{"name": i, "id": i} for i in df.columns],
-                editable=True,
+                style_table={'overflowX': 'scroll'},
                 filter_action='native',
                 sort_action='native',
                 sort_mode='multi',
                 column_selectable='single',
-                row_selectable='multi',
-                row_deletable=True,
                 selected_columns=[],
                 selected_rows=[],
                 page_action='native',
                 page_current= 0,
                 page_size= 20,
+                style_data_conditional=[        
+                    {'if': {'row_index': 'odd'},
+                    'backgroundColor': 'rgb(248, 248, 248)'}
+                ],
             ),
-            html.Hr(),
+            html.Br(),
         ]
     )
 
@@ -241,7 +243,7 @@ def update_matrix(data,curso):
         df = df[df['course'].isin([curso])]
     df=df.iloc[:,1:]    
     labels=df.columns
-    fig = px.scatter_matrix(df, dimensions=labels,width=1150,height=1150,)
+    fig = px.scatter_matrix(df, dimensions=labels,width=1150,height=1150)
     fig.update_yaxes(automargin=True)
     fig.update_xaxes(automargin=True)
     return fig

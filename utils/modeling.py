@@ -69,7 +69,7 @@ def make_gridSearch(model,X,y,splits):
     return final_model
 
 def buildModel(df2, y_v, X_v,slider,splits, model):
-        df=df2.copy()
+        df=df2
         df=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
         X=df[X_v]
         y=df[y_v]  

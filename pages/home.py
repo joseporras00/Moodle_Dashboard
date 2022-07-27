@@ -36,11 +36,12 @@ def layout():
                         ),
                     ]
                 ),
+                html.Br(),
                 dbc.Row(
                     [
                         dbc.Col(
                             [
-                                html.H2("DataFrame sin Procesar"),
+                                html.H3("DataFrame sin Procesar"),
                             ]
                         ),
                     ]
@@ -52,7 +53,7 @@ def layout():
                                 html.Div(
                                     dash_table.DataTable(data=df_prueba.to_dict('records'), 
                                          columns=[{"name": i, "id": i} for i in df_prueba.columns],
-                                        style_table={'minWidth': '100%'},
+                                        style_table={'overflowX': 'scroll'},
                                         filter_action='native',
                                         sort_action='native',
                                         sort_mode='multi',
@@ -63,12 +64,17 @@ def layout():
                                         page_action='native',
                                         page_current= 0,
                                         page_size= 20,
+                                        style_data_conditional=[        
+                                            {'if': {'row_index': 'odd'},
+                                            'backgroundColor': 'rgb(248, 248, 248)'}
+                                        ],
                                     ),title='DataFrame Sin Procesar'
                                 ),
                             ]
                         ),
                     ]
                 ),
+                html.Br(),
                 dbc.Row([html.Div(id='contenido'),]),
             ],                
         )
@@ -79,67 +85,72 @@ def layout():
     [Input("stored-data", "data")],
 )
 def update_tabla(data):
-    df=pd.DataFrame(data)
-    return [html.H2("DataFrame Procesado"),
-            html.Div(
-                dash_table.DataTable(data=df.to_dict('rows'), 
-                                         columns=[{"name": i, "id": i} for i in df.columns],
-                                         style_table={'minWidth': '100%'},
-                                        filter_action='native',
-                                        sort_action='native',
-                                        sort_mode='multi',
-                                        column_selectable='single',
-                                        row_selectable='multi',
-                                        selected_columns=[],
-                                        selected_rows=[],
-                                        page_action='native',
-                                        page_current= 0,
-                                        page_size= 20,
-                    ),title='DataFrame Sin Procesar',
-            ),            
-            dbc.Row(
-                            [
-                            dbc.Col(
-                                daq.LEDDisplay(
-                                    id='records',
-                                    value=str(df.shape[0]),
-                                    label = 'Records',
-                                    size=FONTSIZE,
-                                    color = FONTCOLOR,
-                                    backgroundColor=BGCOLOR
-                                )
-                            ),
-                            dbc.Col(
-                                daq.LEDDisplay(
-                                    id='variables',
-                                    value=str(df.shape[1]),
-                                    label = 'variables',
-                                    size=FONTSIZE,
-                                    color = FONTCOLOR,
-                                    backgroundColor=BGCOLOR
+        df=pd.DataFrame(data).copy()
+        return [html.H3("DataFrame Procesado"),
+                html.Div(
+                    dash_table.DataTable(data=df.to_dict('rows'), 
+                                            columns=[{"name": i, "id": i} for i in df.columns],
+                                            style_table={'overflowX': 'scroll'},
+                                            filter_action='native',
+                                            sort_action='native',
+                                            sort_mode='multi',
+                                            column_selectable='single',
+                                            selected_columns=[],
+                                            selected_rows=[],
+                                            page_action='native',
+                                            page_current= 0,
+                                            page_size= 20,
+                                            style_data_conditional=[        
+                                                {'if': {'row_index': 'odd'},
+                                                'backgroundColor': 'rgb(248, 248, 248)'}
+                                            ],
+                        ),title='DataFrame Procesado',
+                ),    
+                html.Br(),        
+                dbc.Row(
+                                [
+                                dbc.Col(
+                                    daq.LEDDisplay(
+                                        id='records',
+                                        value=str(df.shape[0]),
+                                        label = 'Records',
+                                        size=FONTSIZE,
+                                        color = FONTCOLOR,
+                                        backgroundColor=BGCOLOR
+                                    )
                                 ),
-                            ),
-                            dbc.Col(
-                                daq.LEDDisplay(
-                                    id='numeric',
-                                    value=str(len([i for i in list(df.columns) if df.dtypes[i] in ['float64','int64']])),
-                                    label = 'numeric',
-                                    size=FONTSIZE,
-                                    color = FONTCOLOR,
-                                    backgroundColor=BGCOLOR
+                                dbc.Col(
+                                    daq.LEDDisplay(
+                                        id='variables',
+                                        value=str(df.shape[1]),
+                                        label = 'variables',
+                                        size=FONTSIZE,
+                                        color = FONTCOLOR,
+                                        backgroundColor=BGCOLOR
+                                    ),
                                 ),
+                                dbc.Col(
+                                    daq.LEDDisplay(
+                                        id='numeric',
+                                        value=str(len([i for i in list(df.columns) if df.dtypes[i] in ['float64','int64']])),
+                                        label = 'numeric',
+                                        size=FONTSIZE,
+                                        color = FONTCOLOR,
+                                        backgroundColor=BGCOLOR
+                                    ),
+                                ),
+                                dbc.Col(
+                                    daq.LEDDisplay(
+                                        id='categorical',
+                                        value=str(len([i for i in list(df.columns) if df.dtypes[i] in ['object']])),
+                                        label = 'categorical',
+                                        size=FONTSIZE,
+                                        color = FONTCOLOR,
+                                        backgroundColor=BGCOLOR
+                                    )
+                                ),
+                                ]
                             ),
-                            dbc.Col(
-                                daq.LEDDisplay(
-                                    id='categorical',
-                                    value=str(len([i for i in list(df.columns) if df.dtypes[i] in ['object']])),
-                                    label = 'categorical',
-                                    size=FONTSIZE,
-                                    color = FONTCOLOR,
-                                    backgroundColor=BGCOLOR
-                                )
-                            ),
-                            ]
-                        ),
-        ]
-    
+            ]
+
+        
