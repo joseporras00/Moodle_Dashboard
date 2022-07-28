@@ -113,9 +113,12 @@ def display(data):
     if data!=None:
         df=pd.DataFrame(data)
         df_1=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
-        df_2=df_1.iloc[1:,:-1]
+        df_2=df_1.copy()
+        print(df_2)
         model=joblib.load(open('./assets/my_model.joblib','rb'))
-        predictions=model.predict(df_2)
+        f_names=model.feature_names
+        print(f_names)
+        predictions=model.predict(df_2[f_names])
         df_pred = pd.DataFrame (predictions, columns = ['predicted'])
         df_merged = pd.concat([df, df_pred], axis=1, join='inner')
         return [html.H2("Predictions"),

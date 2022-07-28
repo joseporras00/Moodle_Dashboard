@@ -77,8 +77,9 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
         model=make_gridSearch(model,X,y,splits)   
         
         trainX, testX, trainy, testy = train_test_split(X, y, train_size= slider/100)  
-        #model.fit(trainX, trainy)
-            
+        model.feature_names=list(X_v)
+        print(model.feature_names)
+        
         lr_probs = model.predict_proba(testX)
         yhat = model.predict(testX)            
             
