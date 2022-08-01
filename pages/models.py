@@ -70,9 +70,10 @@ def layout():
                 clearable=False,
                 className='dcc_control',
             ),
+            html.Button('Train', id='btn-train', n_clicks=0),
 #--------------------------------------------------------------------------------------------------------------------
             html.Br(),
-            dbc.Row(
+            dbc.Spinner(dbc.Row(
                 [
                 dbc.Col(
                     daq.LEDDisplay(
@@ -119,7 +120,7 @@ def layout():
                     ]
                 )
                 ]
-            ),
+            )),
             html.Br(),
 #--------------------------------------------------------------------------------------------
             html.H5('Precission'),
@@ -155,16 +156,17 @@ def layout():
    ],
    [
        State('stored-data', 'data'),
-       Input('select_target', 'value'),
-       Input('select_independent', 'value'),
-       Input('slider', 'value'),
-       Input('id-splits', 'value'),
-       Input('select_models', 'value')        
-   ]
+       State('select_target', 'value'),
+       State('select_independent', 'value'),
+       State('slider', 'value'),
+       State('id-splits', 'value'),
+       State('select_models', 'value'),
+       Input('btn-train', 'n_clicks'),      
+   ],
+   prevent_initial_call=True
 )
-def measurePerformance(data, target, independent, slider,splits, selected_models):
-    #df= pd.read_csv('./assets/data.csv',header=0).copy()
-    df=pd.DataFrame(data)
+def measurePerformance(data, target, independent, slider,splits, selected_models, clicks):
+    df=pd.DataFrame(data).copy()
     precision, recall, accuracy, f1, fig1, fig2, reporte  = buildModel(df,target,independent, slider,splits, selected_models)
 
     return precision, recall, accuracy,f1, fig1,fig2, reporte

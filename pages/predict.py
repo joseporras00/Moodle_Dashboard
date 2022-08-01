@@ -117,7 +117,6 @@ def display(data):
         print(df_2)
         model=joblib.load(open('./assets/my_model.joblib','rb'))
         f_names=model.feature_names
-        print(f_names)
         predictions=model.predict(df_2[f_names])
         df_pred = pd.DataFrame (predictions, columns = ['predicted'])
         df_merged = pd.concat([df, df_pred], axis=1, join='inner')

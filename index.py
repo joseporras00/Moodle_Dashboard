@@ -57,7 +57,7 @@ app.layout = dbc.Container(
                             dbc.Nav(
                                 [                                    
                                     dbc.NavItem(dbc.NavLink("Home", href=app.get_relative_path("/"))),
-                                    dbc.NavItem(dbc.NavLink("Upload", href=app.get_relative_path("/upload"))),
+                                    dbc.NavItem(dbc.NavLink("Dashboard", href=app.get_relative_path("/dash"))),
                                     dbc.NavItem(dbc.NavLink("Train models", href=app.get_relative_path("/train"))),
                                     dbc.NavItem(dbc.NavLink("Predict", href=app.get_relative_path("/predict"))),
                                 ],
@@ -140,20 +140,58 @@ def update_data(contents, filename):
 )
 def display_page_content(pathname,data):
         path = app.strip_relative_path(pathname)
-        if data!=None:
-            if not path:
+        if not path:
+            if data!=None:
                 return pages.home.layout(), False, False
-            elif path == "upload":
+            else:
+                return pages.home.layout(), False, True
+        elif path == "dash":
+            if data!=None:
                 return pages.upload.layout(), True, False
-            elif path == "train":
+            else:
+                return [dbc.Modal(
+                            [
+                                dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No has añadido datos"]),
+                                dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
+                            ],
+                            id="modal-fs",
+                            is_open=True,
+                            keyboard=False,
+                            backdrop="static",
+                        ),], False, False
+        elif path == "train":
+            if data!=None:
                 return pages.models.layout(), True , False
-            elif path == "predict":
+            else:
+                return [dbc.Modal(
+                            [
+                                dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No has añadido datos"]),
+                                dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
+                            ],
+                            id="modal-fs",
+                            is_open=True,
+                            keyboard=False,
+                            backdrop="static",
+                        ),], False, False
+        elif path == "predict":
+            if os.path.exists('assets/my_model.joblib')==True:
                 return pages.predict.layout(), True, False
             else:
-                return "404"
+                return [dbc.Modal(
+                            [
+                                dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No existe un modelo en la aplicación para poder realizar la prediccion"]),
+                                dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
+                            ],
+                            id="modal-fs",
+                            is_open=True,
+                            keyboard=False,
+                            backdrop="static",
+                        ),], False, False
         else:
-            path=app.get_relative_path("/")
-            return pages.home.layout(), False, True
+            return "404"
 
 
 if __name__ == "__main__":

@@ -78,21 +78,11 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
         
         trainX, testX, trainy, testy = train_test_split(X, y, train_size= slider/100)  
         model.feature_names=list(X_v)
-        print(model.feature_names)
         
         lr_probs = model.predict_proba(testX)
         yhat = model.predict(testX)            
             
-        lr_probs = lr_probs[:, 1]            
-
-            # precision tp / (tp + fp)
-        #final_prec.append(round(precision_score(testy, yhat,average='micro'),2))
-            # recall: tp / (tp + fn)
-        #final_recall.append(round(recall_score(testy, yhat,average='micro'),2))
-            
-        #final_acu.append(round(accuracy_score(testy, yhat)*100,1))
-        #final_f1.append(round(f1_score(testy, yhat,average='micro'),2))
-        
+        lr_probs = lr_probs[:, 1]              
                 
         fig_precision = px.histogram(
                 x = lr_probs, color=testy, nbins=50,
