@@ -126,13 +126,17 @@ def layout():
             html.H5('Precission'),
             html.Div(
                 [dcc.Graph(id='main_graph')],
+                id='div-prec',
                 className='pretty_container six columns',
+                hidden=True,
             ),
             html.Br(),
             html.H5('Confussion Matrix'),
             html.Div(
                 [dcc.Graph(id='conf_matrix')],
+                id='div-confm',
                 className='pretty_container six columns',
+                hidden=True,
             ),
             html.Br(),
             dbc.CardHeader("Report"),
@@ -153,6 +157,8 @@ def layout():
         Output('main_graph', 'figure'),
         Output('conf_matrix', 'figure'), 
         Output('report-div', 'children'),
+        Output('div-prec', 'hidden'),
+        Output('div-confm', 'hidden'),
    ],
    [
        State('stored-data', 'data'),
@@ -166,10 +172,11 @@ def layout():
    prevent_initial_call=True
 )
 def measurePerformance(data, target, independent, slider,splits, selected_models, clicks):
-    df=pd.DataFrame(data).copy()
-    precision, recall, accuracy, f1, fig1, fig2, reporte  = buildModel(df,target,independent, slider,splits, selected_models)
+    if data!=None:
+        df=pd.DataFrame(data).copy()
+        precision, recall, accuracy, f1, fig1, fig2, reporte  = buildModel(df,target,independent, slider,splits, selected_models)
 
-    return precision, recall, accuracy,f1, fig1,fig2, reporte
+        return precision, recall, accuracy,f1, fig1,fig2, reporte, False, False
 
 
 

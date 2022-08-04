@@ -1,4 +1,4 @@
 from . import home
 from . import models
-from . import upload
+from . import dashboard
 from . import predict

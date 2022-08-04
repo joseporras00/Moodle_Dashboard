@@ -64,7 +64,7 @@ def layout():
             html.Div(id='download-btn',
                      children=[dbc.Button(id='btn',
                         children=[html.I(className="fa fa-download mr-1"), "Download"],
-                        color="info",
+                        color="#FB9C34",
                         className="mt-1"
                         ),
                     ],
@@ -114,7 +114,6 @@ def display(data):
         df=pd.DataFrame(data)
         df_1=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
         df_2=df_1.copy()
-        print(df_2)
         model=joblib.load(open('./assets/my_model.joblib','rb'))
         f_names=model.feature_names
         predictions=model.predict(df_2[f_names])

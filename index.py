@@ -74,7 +74,7 @@ app.layout = dbc.Container(
                 ],
                 
             ),
-            dcc.Store(id='stored-data',data=None,storage_type='local'),
+            dcc.Store(id='stored-data',data=None,storage_type='session'),
             #BODY
             html.Div(id='upload-div',
                 children=[
@@ -147,7 +147,7 @@ def display_page_content(pathname,data):
                 return pages.home.layout(), False, True
         elif path == "dash":
             if data!=None:
-                return pages.upload.layout(), True, False
+                return pages.dashboard.layout(), True, False
             else:
                 return [dbc.Modal(
                             [
@@ -182,7 +182,8 @@ def display_page_content(pathname,data):
                 return [dbc.Modal(
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
-                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No existe un modelo en la aplicación para poder realizar la prediccion"]),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No existe un modelo en la aplicación para poder realizar la prediccion.",
+                                               " Ingresa un archivo para entrenar y crea un modelo predictivo"]),
                                 dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
                             ],
                             id="modal-fs",

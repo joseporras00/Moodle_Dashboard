@@ -95,7 +95,7 @@ def layout():
                                 clearable=True,
                                 value=None,
                             ),                                 
-                            dcc.Graph(id="Mygraph"),
+                            dbc.Spinner(dcc.Graph(id="Mygraph")),
                         ]),
                     ]),              
                     dbc.Col([
@@ -106,28 +106,28 @@ def layout():
                             options=['n_assignment','n_posts','n_read','n_quiz','n_quiz_a','n_quiz_s','total_time_assignment','total_time_quiz','total_time_forum'],
                             value="n_posts",
                         ), 
-                        dcc.Graph(id="pie2"),
+                        dbc.Spinner(dcc.Graph(id="pie2")),
                     ]),
                 ]),            
                                
                 dbc.Row([
                     html.Div([
                         html.H5("Scatter Matrix:"),
-                        dcc.Graph(id='matrix'),
+                        dbc.Spinner(dcc.Graph(id='matrix')),
                     ]),
                 ]),
                 
                 dbc.Row([
                     html.Div([
                         html.H5("Correlation Matrix:"),
-                        dcc.Graph(id='matrix2'),
+                        dbc.Spinner(dcc.Graph(id='matrix2')),
                     ]),
                 ]),
                 
                 dbc.Row([
                     html.Div([
                         html.H5("Features:"),
-                        dcc.Graph(id='feature_graph'),
+                        dbc.Spinner(dcc.Graph(id='feature_graph')),
                     ]),
                 ]),
                      
