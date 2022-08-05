@@ -196,4 +196,4 @@ def display_page_content(pathname,data):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True)

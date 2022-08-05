@@ -35,7 +35,7 @@ def layout():
                 handleLabel={'showCurrentValue': True,'label': 'SPLIT'},
                 step=10,
             ),
-
+            html.Br(),
             html.P('Selecciona el Target', className='control_label'),
             dcc.Dropdown(
                 id='select_target',
@@ -45,6 +45,7 @@ def layout():
                 clearable=False,
                 className='dcc_control',
             ),
+            html.Br(),
             html.P('Selecciona las variables independientes', className='control_label'),
             dcc.Dropdown(
                 id='select_independent',
@@ -53,6 +54,7 @@ def layout():
                 value=['course','n_assignment','n_posts','n_read','n_quiz','n_quiz_a','n_quiz_s','total_time_assignment','total_time_quiz','total_time_forum'],
                 className='dcc_control',
             ),
+            html.Br(),
             html.P('Selecciona numero de Splits', className='control_label'),
             daq.NumericInput(
                 id='id-splits',
@@ -60,7 +62,8 @@ def layout():
                 max=10,
                 size = 75,
                 value=2
-            ),  
+            ),
+            html.Br(),
             html.P('Elige un modelo', className='control_label'),
             dcc.Dropdown(
                 id='select_models',
@@ -70,7 +73,14 @@ def layout():
                 clearable=False,
                 className='dcc_control',
             ),
-            html.Button('Train', id='btn-train', n_clicks=0),
+            html.Br(),
+            html.Div([
+                html.Button('Train', id='btn-train', n_clicks=0),
+                ],
+                style={'verticalAlign': 'middle', 'display': 'inline'},
+                className='text-center',
+            ),
+            html.Br(),
 #--------------------------------------------------------------------------------------------------------------------
             html.Br(),
             dbc.Spinner(dbc.Row(
@@ -124,27 +134,27 @@ def layout():
             html.Br(),
 #--------------------------------------------------------------------------------------------
             html.H5('Precission'),
-            html.Div(
+            dbc.Spinner(html.Div(
                 [dcc.Graph(id='main_graph')],
                 id='div-prec',
                 className='pretty_container six columns',
                 hidden=True,
-            ),
+            )),
             html.Br(),
             html.H5('Confussion Matrix'),
-            html.Div(
+            dbc.Spinner(html.Div(
                 [dcc.Graph(id='conf_matrix')],
                 id='div-confm',
                 className='pretty_container six columns',
                 hidden=True,
-            ),
+            )),
             html.Br(),
-            dbc.CardHeader("Report"),
+            dbc.Spinner([dbc.CardHeader("Report"),
                 dbc.CardBody(
                     [
                         html.Pre(id='report-div',)
                     ]
-                ),            
+                )]),            
     ]
     
     
