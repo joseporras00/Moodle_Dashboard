@@ -1,36 +1,35 @@
 from sklearn.model_selection import train_test_split
 import pandas as pd
+from sklearn.preprocessing import KBinsDiscretizer
 
-def load_data(filepath):
-
-    df = pd.read_csv(filepath)
-    target = df.columns[-1]
-    features = [col for col in df.columns if col not in target]
-    X = df[features].values
-    y = df[target].values
-    labels = df[target].unique().tolist()
-    labels.sort()
-
-    train_df, test_df = train_test_split(df, test_size = .30, random_state=42)
-
-    X_train = train_df[features].values
-    y_train = train_df[target].values
-    X_test = test_df[features].values
-    y_test = test_df[target].values
-
-
-    return labels, features, target, X_train, X_test, y_train, y_test
 
 def read_data(archivo):
+    """
+    It reads a csv file and returns a dataframe
+    
+    :param archivo: the name of the file you want to read
+    :return: A dataframe
+    """
     df = pd.read_csv(archivo,header=0)
-    #print(df_moodle.columns)
     return df
     
 def preprocess_data(df):
-    df2=df.copy()
-    df2=df2.replace({'PASS': 1, 'FAIL':0})
-    df2=df2.drop(['course'], axis=1)    
-    return df2
+    """
+    The function takes a dataframe as input, and returns a dataframe with the first column as the
+    student ID, the second column as the student's performance, and the remaining columns as the
+    student's activity levels. The activity levels are binned into three categories: LOW, MEDIUM, and
+    HIGH
+    
+    :param df: the dataframe
+    :return: A dataframe with the columns:
+    """
+    df2=df.iloc[1:, 1:-1].copy()
+    columns=df2.columns.values
+    enc=KBinsDiscretizer(n_bins=3,encode='ordinal', strategy='uniform')
+    enc.fit(df2)
+    df2=enc.transform(df2)
+    df2=pd.DataFrame (df2, columns = columns)
+    df_merged = pd.concat([df.iloc[:,0], df2, df.iloc[:,-1]], axis=1, join='inner')
+    df_merged=df_merged.replace({0:'LOW', 1:'MEDIUM', 2:'HIGH'})
+    return df_merged
 
-df_moodle=(read_data('data/MoodleSummary.csv'))
-df_moodle_p=preprocess_data(read_data('data/MoodleSummary.csv'))

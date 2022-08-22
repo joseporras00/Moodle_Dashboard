@@ -14,13 +14,16 @@ from app import app
 import pages
 from data_reader import *
 
+# A dictionary that contains the username and password for the authentication.
 VALID_USERNAME_PASSWORD_PAIRS = {
     'josepo': 'admin',
     'cristobal': 'admin'
 }
 
+# The way to run the app in a local server.
 server = app.server
 
+# The way to authenticate the user.
 auth = dash_auth.BasicAuth(
     app,
     VALID_USERNAME_PASSWORD_PAIRS
@@ -29,7 +32,9 @@ auth = dash_auth.BasicAuth(
 app.layout = dbc.Container(
     [html.Div(
         [          
+            # A component that allows to get the current URL of the page.
             dcc.Location(id="url", refresh=False),
+            # Creating the navbar of the app.
             dbc.Navbar(
                 children=[
                     html.A(
@@ -51,6 +56,7 @@ app.layout = dbc.Container(
                         ),
                         href=app.get_relative_path("/"),
                     ),
+                    # Creating the items of the navbar.
                     dbc.Row(
                         [
                         dbc.Collapse(
@@ -74,8 +80,11 @@ app.layout = dbc.Container(
                 ],
                 
             ),
-            dcc.Store(id='stored-data',data=None,storage_type='session'),
+            # A component that allows to store data in the whole the app.
+            dcc.Store(id='stored-data',data=None,storage_type='local'),
+            dcc.Store(id='stored-data2',data=None,storage_type='local'),
             #BODY
+            # A component that allows to upload a file.
             html.Div(id='upload-div',
                 children=[
                     dcc.Upload(
@@ -95,7 +104,7 @@ app.layout = dbc.Container(
                         multiple=False,
                     ),       
                 ]),
-                dbc.Alert(["No se han añadido los datos para realizar las funcionalidades, introducelos para continuar"],
+                dbc.Alert(["The data to perform the funcionalities has not been added, upload them to continue"],
                                 id="alert-auto",
                                 is_open=False,
                                 dismissable=True,
@@ -108,11 +117,22 @@ app.layout = dbc.Container(
     ]
 )
 
-@app.callback(Output('stored-data','data'),[
+@app.callback(Output('stored-data2','data'),[
     Input('upload-data', 'contents'),
     Input('upload-data', 'filename')]
 )
 def update_data(contents, filename):
+    """
+    It takes the contents of the uploaded file and converts it to a pandas dataframe. 
+    
+    The dataframe is then converted to a dictionary to be returned. 
+    
+    The dictionary is then used to update the data in the table.
+    
+    :param contents: the contents of the uploaded file
+    :param filename: The name of the uploaded file
+    :return: A list of dictionaries.
+    """
     if contents:
         content_type, content_string = contents.split(",")
 
@@ -139,12 +159,21 @@ def update_data(contents, filename):
               prevent_initial_call=True
 )
 def display_page_content(pathname,data):
+        """
+        If the path is empty, return the home page. If the path is "dash", return the dashboard page. If the
+        path is "train", return the models page. If the path is "predict", return the predict page.
+        Otherwise, return a 404 page
+        
+        :param pathname: The pathname argument is the current location of the page
+        :param data: The dataframe that is uploaded by the user
+        :return: a list of dash components.
+        """
         path = app.strip_relative_path(pathname)
         if not path:
             if data!=None:
-                return pages.home.layout(), False, False
+                return pages.home2.layout(), False, False
             else:
-                return pages.home.layout(), False, True
+                return pages.home2.layout(), False, True
         elif path == "dash":
             if data!=None:
                 return pages.dashboard.layout(), True, False
@@ -152,7 +181,7 @@ def display_page_content(pathname,data):
                 return [dbc.Modal(
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
-                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No has añadido datos"]),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data uploaded"]),
                                 dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
                             ],
                             id="modal-fs",
@@ -167,7 +196,7 @@ def display_page_content(pathname,data):
                 return [dbc.Modal(
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
-                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No has añadido datos"]),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data uploaded"]),
                                 dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
                             ],
                             id="modal-fs",
@@ -182,8 +211,8 @@ def display_page_content(pathname,data):
                 return [dbc.Modal(
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
-                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No existe un modelo en la aplicación para poder realizar la prediccion.",
-                                               " Ingresa un archivo para entrenar y crea un modelo predictivo"]),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No model on the server to make predictions..",
+                                               " Upload a data file to create and train a model."]),
                                 dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
                             ],
                             id="modal-fs",
@@ -196,4 +225,4 @@ def display_page_content(pathname,data):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=False)

@@ -4,6 +4,15 @@ path_to_directory="data/"
 files = [arff for arff in os.listdir(path_to_directory) if arff.endswith(".arff")]
 
 def toCsv(content): 
+    """
+    If the line contains "@attribute", then get the attribute name and add it to the header. 
+    If the line contains "@data", then set the data flag to True and add the header to the newContent
+    list. 
+    If the data flag is True, then add the line to the newContent list.
+    
+    :param content: the content of the file
+    :return: A list of strings.
+    """
     data = False
     header = ""
     newContent = []

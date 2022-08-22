@@ -1,61 +1,42 @@
-# Formula 1 Statistics Page
+# Moodle Dashboard
 
-_*ATTENTION: This version of F1STATS in this repository is made with the open source version of [Dash](https://plotly.com/dash/) and [Dash Bootstrap Components](https://dash-bootstrap-components.opensource.faculty.ai/).*_
+This web application allows visualize data of students, differents graphs and also you can create and train predictions model to use for future students.
 
-_*My published version of F1STATS (found [here](https://formula1stats.herokuapp.com/)) was built with [Dash Design Kit](https://plotly.com/dash/design-kit/), a commercially licensed software, which is why I have set my original repository to private. This version of the app contains the exact same graphing tools and information - the only difference are the UI components.*_
+Built with Python and Dash, this application will provide users an in-depth look at Moodle's data.
 
-_*If you have questions regarding the difference between the open source version of Dash and Dash Enterprise, feel free to reach out!*_
+Dash is an open-source Python framework that is used for building data visualization applications - this application offers a useful, interactive platform for teachers wich use Moodle. 
 
-This web application produces race results, driver and constructor rankings, up-to-date timetables, and comparisons of Formula 1 seasons from 1950 to the present.
-
-Built with Python, Dash, and the Ergast Developer API (Motor Racing Data), this application will provide users an in-depth look at the numbers behind Formula 1.
-
-Dash is an open-source Python framework that is used for building data visualization applications - combining Dash with the [Ergast Developer API](http://ergast.com/mrd/), this application offers a useful, interactive platform for old and new fans of the motorsport. 
-
-The application will be divided into four categories/tabs:
+The application will be divided into four pages:
 
 * Home
-* Seasons
-* Drivers
-* Constructors
-* Grand Prix
+* Dashboard
+* Train Model
+* Predict
 
-## Home Tab (Coming Soon)
+## Home
 The Home page will display:
 
-* Results of the most recent race (top five drivers)
-* Countdown to the next Grand Prix
-* Recent headlines regarding Formula 1
+* A upload component to upload the file for dashboard and train model pages
+* A table with the data uploaded
 
-## Seasons Tab
-The Seasons page will feature an interactive line graph that shows the trajectory of points of earned at each Grand Prix for each driver. By default, the top six drivers will be shown but the user will be given the option to add or remove drivers to this graph. 
+## Dashboard
+This page will feature interactive graphs about the students' marks and other variables, also you can filter each graph with the number of the course you want to study. Then you could see a correlation matrix and the importance of the variables of the dataset.
 
-## Drivers
-The Drivers tab will display:
+## Train Model
+The train model page will allow you to create a prediction model:
 
-* Driver's bio
-* Points line graph by year
-* Individual race results
-* List of race wins
-* List of podium finishes
+* Train and test size
+* Select target and independent variables
+* Select kfold splits
+* Select the type of the model
+* Results
 
-## Constructors
-The constructors tab will display:
-
-* Constructor standings by year
-* Pie graph that shows the proportion of points earned by constructor 
-
-## Grand Prix
-The Grand Prix tab will display:
-
-* Circuit layout
-* Driver with most wins
-* Driver with most pole positions
-* Fastest Lap Record and record holder
+## Predict
+The predict page will show the prediction of a file uploaded in a table. Then you could download it as a CSV file.
 
 ## Running The Script
 
-In order to access the single-page application, open up Terminal and make sure to change the working directory to exactly where you saved this folder:
+In order to access the application, open up Terminal and make sure to change the working directory to exactly where you saved this folder:
 
 * Create a virtual environment and activate it
 * Run __pip install -r requirements.txt__
@@ -64,14 +45,8 @@ In order to access the single-page application, open up Terminal and make sure t
 
 ## Built With
 * [Dash](https://dash.plot.ly)
-* [Ergast Developer API](http://ergast.com/mrd/)
-
-## Contributing
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
-* [Chris Jeon](https://github.com/christopherjeon)
+* [Jose Manuel Porras](https://github.com/joseporras00)
 
-## Acknowledgements
-Thank you to Ergast for providing the necessary data. The following statistics that helped build this app can be found [here](http://ergast.com/mrd/).
 

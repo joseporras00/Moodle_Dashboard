@@ -2,6 +2,17 @@ import plotly.graph_objects as go
 from sklearn.metrics import classification_report as classificationreport
 
 def evaluate_model(model, X_train, y_train, X_test, y_test):
+    """
+    It takes a model, training data, and test data, fits the model to the training data, makes
+    predictions on the test data, and returns a classification report
+    
+    :param model: the model to be evaluated
+    :param X_train: The training data
+    :param y_train: The training labels
+    :param X_test: The test data
+    :param y_test: the actual values of the target variable
+    :return: A dictionary with the precision, recall, f1-score, and support for each class.
+    """
     model = model
     model.fit(X_train, y_train)
 
@@ -12,6 +23,12 @@ def evaluate_model(model, X_train, y_train, X_test, y_test):
     return report
 
 def create_heatmap(df):
+    """
+    It takes a dataframe as input and returns a heatmap figure
+    
+    :param df: the dataframe that contains the data to be plotted
+    :return: A figure object
+    """
 
     fig = go.Figure(data=go.Heatmap(
                        z=df.values.tolist(),

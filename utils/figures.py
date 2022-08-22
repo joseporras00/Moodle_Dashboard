@@ -15,6 +15,13 @@ from sklearn.ensemble import RandomForestClassifier,AdaBoostClassifier
 import plotly.express as px
 
 def featureImportance(df):
+    """
+    The function takes a dataframe as input, splits it into training and testing sets, fits a random
+    forest model, and returns a plot of the feature importances
+    
+    :param df: the dataframe you want to use
+    :return: A plotly figure object
+    """
     X = df.iloc[:,:-1]
     y = df.iloc[:,-1]
     trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.5, random_state=2)
@@ -28,11 +35,24 @@ def featureImportance(df):
 
 
 def corelationMatrix(df):
+    """
+    It takes a dataframe as input and returns a plotly figure of the correlation matrix
+    
+    :param df: The dataframe you want to plot
+    :return: A correlation matrix
+    """
     corr_matrix = df.corr()
     fig = px.imshow(corr_matrix, title= "Correlation Matrix")
     return fig
 
 def serve_bar(df):
+    """
+    It takes a dataframe as input, and returns a bar chart of the number of quiz A's taken by each
+    student
+    
+    :param df: the dataframe to be plotted
+    :return: A plotly figure object.
+    """
     x_axis='student_id'
     y_axis='n_quiz_a'
     return px.bar(
@@ -188,6 +208,13 @@ def serve_prediction_plot(df):
 
 
 def serve_roc_curve(df):
+    """
+    We take in a dataframe, split it into training and testing data, fit a model, and then plot the ROC
+    curve
+    
+    :param df: The dataframe that contains the data to be plotted
+    :return: A plotly figure object
+    """
     X = df.iloc[:,:-1].values
     y = df.iloc[:,-1].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3, random_state=42)
@@ -226,6 +253,14 @@ def serve_roc_curve(df):
 
 
 def serve_pie_confusion_matrix(y_test, y_pred):
+    """
+    It takes the true labels and predicted labels as input, and returns a plotly figure object that can
+    be used to plot a pie chart of the confusion matrix
+    
+    :param y_test: the actual values of the target variable
+    :param y_pred: the predicted values from the model
+    :return: A plotly figure object
+    """
     y_pred_test = y_pred.astype(int)
 
     matrix = metrics.confusion_matrix(y_true=y_test, y_pred=y_pred_test)

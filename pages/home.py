@@ -8,12 +8,13 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 from utils.helpers import *
 from utils.figures import *
-
 from app import *
 from data_reader import *
+
 FONTSIZE = 20
 FONTCOLOR = '#F5FFFA'
 BGCOLOR ='#3445DB'
+# Reading the data from the csv file and storing it in a dataframe.
 df_prueba=read_data('data/moodle7numericos.csv')
 
 def layout():
@@ -22,6 +23,7 @@ def layout():
             children=[
                 dbc.Card(
                     children=[
+                        # A card with a header and a body.
                         dbc.CardHeader("Bienvenido!"),
                         dbc.CardBody(
                             [
@@ -41,7 +43,7 @@ def layout():
                     [
                         dbc.Col(
                             [
-                                html.H3("DataFrame sin Procesar"),
+                                html.H3("Unprocessed DataFrame"),
                             ]
                         ),
                     ]
@@ -50,6 +52,7 @@ def layout():
                     [
                         dbc.Col(
                             [
+                                # Creating a table with the data from the dataframe.
                                 html.Div(
                                     dash_table.DataTable(data=df_prueba.to_dict('records'), 
                                          columns=[{"name": i, "id": i} for i in df_prueba.columns],
@@ -68,7 +71,7 @@ def layout():
                                             {'if': {'row_index': 'odd'},
                                             'backgroundColor': 'rgb(248, 248, 248)'}
                                         ],
-                                    ),title='DataFrame Sin Procesar'
+                                    ),title='Unprocessed DataFrame'
                                 ),
                             ]
                         ),
@@ -85,15 +88,25 @@ def layout():
     [Input("stored-data", "data")],
 )
 def update_tabla(data):
-        df=pd.DataFrame(data).copy()
-        return [html.H3("DataFrame Procesado"),
+    """
+    It takes the data from the hidden div, and creates a dataframe from it. 
+    Then it creates a table from the dataframe, and displays it. 
+    Then it creates a row of LED displays, and displays them.
+    
+    :param data: The data to be displayed in the table.
+    :return: A list of html elements.
+    """
+    df=pd.DataFrame(data).copy()
+    return [html.H3("Processed Dataframe"),
                 html.Div(
                     dash_table.DataTable(data=df.to_dict('rows'), 
-                                            columns=[{"name": i, "id": i} for i in df.columns],
+                                            columns=[{"name": i, "id": i, "deletable": True, 'renamable': True} for i in df.columns],
                                             style_table={'overflowX': 'scroll'},
                                             filter_action='native',
                                             sort_action='native',
                                             sort_mode='multi',
+                                            row_deletable=True,
+                                            row_selectable='single',
                                             column_selectable='single',
                                             selected_columns=[],
                                             selected_rows=[],

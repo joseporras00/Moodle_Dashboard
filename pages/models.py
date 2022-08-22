@@ -11,13 +11,12 @@ from dash.dependencies import Input, Output, State, ClientsideFunction
 from dash import callback_context
 import json
 from utils import modeling
-
 from app import app
 import pages
 
 server = app.server
 
-
+# A list of models that are used in the app.
 models = ['LGBM', 'Random Forest','SVC', 'KNN', 'GNB', 'DT','MLP', 'ADABoost','Logistic']
 FONTSIZE = 20
 FONTCOLOR = '#F5FFFA'
@@ -27,6 +26,7 @@ def layout():
     return[
             html.Div(id='slider-output-container'),
             html.Br(),
+            # A slider that allows you to select the train size of the model
             daq.Slider(
                 id = 'slider',
                 min=0,
@@ -36,7 +36,8 @@ def layout():
                 step=10,
             ),
             html.Br(),
-            html.P('Selecciona el Target', className='control_label'),
+            # A dropdown menu for the target option.
+            html.P('Select Target', className='control_label'),
             dcc.Dropdown(
                 id='select_target',
                 multi=False,
@@ -46,7 +47,8 @@ def layout():
                 className='dcc_control',
             ),
             html.Br(),
-            html.P('Selecciona las variables independientes', className='control_label'),
+            # A dropdown menu with multiple options of the features.
+            html.P('Select independent variables', className='control_label'),
             dcc.Dropdown(
                 id='select_independent',
                 multi=True,
@@ -55,7 +57,8 @@ def layout():
                 className='dcc_control',
             ),
             html.Br(),
-            html.P('Selecciona numero de Splits', className='control_label'),
+            # A numeric input that allows you to select the number of splits.
+            html.P('Select number of splits', className='control_label'),
             daq.NumericInput(
                 id='id-splits',
                 min=0,
@@ -64,7 +67,8 @@ def layout():
                 value=2
             ),
             html.Br(),
-            html.P('Elige un modelo', className='control_label'),
+            # A dropdown menu with multiple models.
+            html.P('Select model', className='control_label'),
             dcc.Dropdown(
                 id='select_models',
                 options = [{'label':x, 'value':x} for x in models],
@@ -74,6 +78,7 @@ def layout():
                 className='dcc_control',
             ),
             html.Br(),
+            # A button that triggers the callback function.
             html.Div([
                 html.Button('Train', id='btn-train', n_clicks=0),
                 ],
@@ -83,6 +88,7 @@ def layout():
             html.Br(),
 #--------------------------------------------------------------------------------------------------------------------
             html.Br(),
+            # The values of the metrics.
             dbc.Spinner(dbc.Row(
                 [
                 dbc.Col(
@@ -133,6 +139,7 @@ def layout():
             )),
             html.Br(),
 #--------------------------------------------------------------------------------------------
+            # Graphs about the trained model
             html.H5('Precission'),
             dbc.Spinner(html.Div(
                 [dcc.Graph(id='main_graph')],
@@ -182,6 +189,18 @@ def layout():
    prevent_initial_call=True
 )
 def measurePerformance(data, target, independent, slider,splits, selected_models, clicks):
+    """
+    It takes the arguments of the page and returns metrics and graphs
+    
+    :param data: the dataframe
+    :param target: the name of the column that contains the target variable
+    :param independent: list of independent variables
+    :param slider: training size
+    :param splits: number of splits for cross validation
+    :param selected_models: model to be used
+    :param clicks: to make the callback
+    :return: the precision, recall, accuracy, f1, fig1, fig2, reporte, False, False
+    """
     if data!=None:
         df=pd.DataFrame(data).copy()
         precision, recall, accuracy, f1, fig1, fig2, reporte  = buildModel(df,target,independent, slider,splits, selected_models)

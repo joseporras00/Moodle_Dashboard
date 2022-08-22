@@ -20,9 +20,10 @@ BGCOLOR ='#3445DB'
 def layout():
     return [html.Div(
         [          
+            # Store data in the browser.
             dcc.Store(id='stored-predictData',data=None,storage_type='local'),
             dcc.Store(id='predicted_table',data=None,storage_type='local'),
-            #BODY
+            # A div that contains the upload component for the data to be predicted.
             html.Div(id='upload-data',
                 children=[
                     dcc.Upload(
@@ -43,22 +44,6 @@ def layout():
                     ),       
                 ]),
             html.Br(),
-            dcc.Checklist(
-                ['Does it have header?'],
-                ['Does it have header?'],
-                id='header',                
-            ),
-            html.Br(),
-            html.H5('Separator'),
-            dcc.RadioItems([
-                    {'label': 'Comma', 'value': 'comma'},
-                    {'label': 'Semicolon', 'value': 'semicolon'},
-                    {'label': 'Tabulator', 'value': 'tab'}
-                ],
-                'comma',
-                inline=False,
-                id='separator',
-            ),
             html.Br(),
             html.Div(id="predict-content"),
             html.Div(id='download-btn',
@@ -81,6 +66,17 @@ def layout():
     Input('upload-predictData', 'filename')]
 )
 def update_data(contents, filename):
+    """
+    If the user uploads a file, the function will read the file and return a dictionary
+    of the data. 
+    
+    If the user uploads a file that is not supported, the function will return an
+    error message
+    
+    :param contents: the contents of the uploaded file
+    :param filename: The name of the uploaded file
+    :return: A list of dictionaries.
+    """
     if contents:
         content_type, content_string = contents.split(",")
 
@@ -110,6 +106,13 @@ def update_data(contents, filename):
     prevent_initial_call=True
 )
 def display(data):
+    """
+    It takes the data from the user, loads the model, makes predictions, and returns the predictions in
+    a table
+    
+    :param data: the dataframe to be displayed
+    :return: a list of html elements, a dataframe and a boolean value.
+    """
     if data!=None:
         df=pd.DataFrame(data)
         df_1=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
@@ -150,6 +153,14 @@ def display(data):
     prevent_initial_call=True,
 )
 def func(n_clicks,data):
+    """
+    It takes the data from the table and converts it to a dataframe, then it returns the dataframe as a
+    downloadable csv file
+    
+    :param n_clicks: To perform the callback
+    :param data: the dataframe you want to download
+    :return: The dataframe is being returned as a csv file.
+    """
     if data!=None:
         df=pd.DataFrame(data).copy()
         return dcc.send_data_frame(df.to_csv, "predicted_data.csv")

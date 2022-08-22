@@ -19,6 +19,17 @@ import joblib
 from app import app
 
 def make_gridSearch(model,X,y,splits):
+    """
+    This function takes in a model, X, y, and the number of splits for cross validation. It then creates
+    a dictionary of parameters for each model, and then uses GridSearchCV to find the best parameters
+    for each model
+    
+    :param model: The model you want to use
+    :param X: The input data
+    :param y: The target variable
+    :param splits: number of splits for cross validation
+    :return: The best estimator from the grid search.
+    """
     param_grid={}
     if model == 'GNB':
         model = GaussianNB()
@@ -69,6 +80,18 @@ def make_gridSearch(model,X,y,splits):
     return final_model
 
 def buildModel(df2, y_v, X_v,slider,splits, model):
+        """
+        It takes a dataframe, a list of features, a list of target variables, a slider value, a number of
+        splits for the cross validation, and a model, and returns a bunch of metrics and figures
+        
+        :param df2: the dataframe that contains the data
+        :param y_v: The name of the column that contains the target variable
+        :param X_v: list of features to use in the model
+        :param slider: the percentage of the data to be used for training
+        :param splits: number of splits for the cross validation
+        :param model: the model to be trained
+        :return: the precision, recall, accuracy, f1, fig_precision, fig_m, reporte
+        """
         df=df2
         df=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
         X=df[X_v]
@@ -107,13 +130,18 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
                        )
                 
         
-        exportar_modelo(model)
+        export_model(model)
         
         reporte=classification_report(testy, yhat,target_names=['FAIL', 'PASS', 'GOOD', 'EXCELLENT'])
                 
         return precision, recall, accuracy, f1, fig_precision, fig_m, reporte
     
     
-def exportar_modelo(model):
+def export_model(model):
+    """
+    It takes a model as input, and saves it to a file called my_model.joblib in the assets folder
+    
+    :param model: The model to be exported
+    """
     joblib.dump(model, open('./assets/my_model.joblib', 'wb'))
            
