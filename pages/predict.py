@@ -45,7 +45,7 @@ def layout():
                 ]),
             html.Br(),
             html.Br(),
-            html.Div(id="predict-content"),
+            dbc.Spinner(html.Div(id="predict-content")),
             html.Div(id='download-btn',
                      children=[dbc.Button(id='btn',
                         children=[html.I(className="fa fa-download mr-1"), "Download"],

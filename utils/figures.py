@@ -22,15 +22,14 @@ def featureImportance(df):
     :param df: the dataframe you want to use
     :return: A plotly figure object
     """
-    X = df.iloc[:,:-1]
-    y = df.iloc[:,-1]
+    X = df.iloc[:,:-1].copy()
+    y = df.iloc[:,-1].copy()
     trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.5, random_state=2)
     rf = RandomForestRegressor(n_estimators=100)
     rf.fit(trainX, trainy)
     
     sorted_idx = rf.feature_importances_.argsort()
-    fig_featureImp = px.bar(df.columns[sorted_idx], rf.feature_importances_[sorted_idx],
-    title= 'Variable Importance')
+    fig_featureImp = px.bar(df.columns[sorted_idx], rf.feature_importances_[sorted_idx])
     return fig_featureImp
 
 
@@ -42,7 +41,7 @@ def corelationMatrix(df):
     :return: A correlation matrix
     """
     corr_matrix = df.corr()
-    fig = px.imshow(corr_matrix, title= "Correlation Matrix")
+    fig = px.imshow(corr_matrix)
     return fig
 
 def serve_bar(df):
@@ -64,6 +63,12 @@ def serve_bar(df):
 
 
 def serve_pie_pass(df):
+    """
+    It takes a dataframe, counts the values in a column, and returns a pie chart
+    
+    :param df: the dataframe that contains the data
+    :return: A dictionary with the data and layout of the plot.
+    """
     col_label = "mark"
     col_values = "Count"
     v = df[col_label].value_counts()

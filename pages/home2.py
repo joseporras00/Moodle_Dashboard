@@ -173,7 +173,7 @@ def update_data(data):
     prevent_initial_call=True
 )
 def update_data(btn,data):
-    if data!=None :
+    if data!=None and btn>0:
             df=pd.DataFrame(data).copy()
             df2=preprocess_data(df)
             return df2.to_dict('records')

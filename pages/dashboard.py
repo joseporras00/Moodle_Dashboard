@@ -110,27 +110,25 @@ def layout():
                         dcc.Dropdown(id='variable-dropdown',
                             multi=False,
                             clearable=False,
-                            options=['n_assignment','n_posts','n_read','n_quiz','n_quiz_a','n_quiz_s','total_time_assignment','total_time_quiz','total_time_forum'],
-                            value="n_posts",
                         ), 
                         dbc.Spinner(dcc.Graph(id="pie2")),
                     ]),
                 ]),            
-                               
+                html.Br(),               
                 dbc.Row([
                     html.Div([
                         html.H5("Scatter Matrix:"),
                         dbc.Spinner(dcc.Graph(id='matrix')),
                     ]),
                 ]),
-                
+                html.Br(),
                 dbc.Row([
                     html.Div([
                         html.H5("Correlation Matrix:"),
                         dbc.Spinner(dcc.Graph(id='matrix2')),
                     ]),
                 ]),
-                
+                html.Br(),
                 dbc.Row([
                     html.Div([
                         html.H5("Features importance:"),
@@ -237,6 +235,15 @@ def update_optcourse(data):
     """
     df=pd.DataFrame(data)
     return [{'label':x, 'value':x} for x in sorted(df['course'].unique())]
+
+@app.callback(
+    Output("variable-dropdown", "options"),
+    Output("variable-dropdown", "value"),
+    [Input("stored-data", "data")],
+)
+def update_optvariables(data):
+    df=pd.DataFrame(data)
+    return df.columns.values,df.columns.values[1]
 
 @app.callback(
     Output("pie2", "figure"),

@@ -52,8 +52,6 @@ def layout():
             dcc.Dropdown(
                 id='select_independent',
                 multi=True,
-                options=['course','n_assignment','n_posts','n_read','n_quiz','n_quiz_a','n_quiz_s','total_time_assignment','total_time_quiz','total_time_forum'],
-                value=['course','n_assignment','n_posts','n_read','n_quiz','n_quiz_a','n_quiz_s','total_time_assignment','total_time_quiz','total_time_forum'],
                 className='dcc_control',
             ),
             html.Br(),
@@ -61,10 +59,10 @@ def layout():
             html.P('Select number of splits', className='control_label'),
             daq.NumericInput(
                 id='id-splits',
-                min=0,
+                min=1,
                 max=10,
                 size = 75,
-                value=2
+                value=3
             ),
             html.Br(),
             # A dropdown menu with multiple models.
@@ -208,4 +206,12 @@ def measurePerformance(data, target, independent, slider,splits, selected_models
         return precision, recall, accuracy,f1, fig1,fig2, reporte, False, False
 
 
-
+@app.callback(
+    Output("select_independent", "options"),
+    Output("select_independent", "value"),
+    [Input("stored-data", "data")],
+)
+def update_optvariables(data):
+    df=pd.DataFrame(data)
+    values=df.columns[:-1].values
+    return values,values
