@@ -31,5 +31,5 @@ def preprocess_data(df):
     df2=pd.DataFrame (df2, columns = columns)
     df_merged = pd.concat([df.iloc[:,0], df2, df.iloc[:,-1]], axis=1, join='inner')
     df_merged=df_merged.replace({0:'LOW', 1:'MEDIUM', 2:'HIGH'})
-    return df_merged
+    return pd.DataFrame(df_merged)
 

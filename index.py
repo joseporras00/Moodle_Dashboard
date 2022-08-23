@@ -81,8 +81,8 @@ app.layout = dbc.Container(
                 
             ),
             # A component that allows to store data in the whole the app.
-            dcc.Store(id='stored-data',data=None,storage_type='local'),
-            dcc.Store(id='stored-data2',data=None,storage_type='local'),
+            dcc.Store(id='stored-data',data=None,storage_type='session'),
+            dcc.Store(id='stored-data2',data=None,storage_type='session'),
             #BODY
             # A component that allows to upload a file.
             html.Div(id='upload-div',
@@ -225,4 +225,4 @@ def display_page_content(pathname,data):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True)

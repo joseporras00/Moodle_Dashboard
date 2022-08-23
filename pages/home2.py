@@ -39,25 +39,42 @@ def layout():
                     ]
                 ),
                 html.Br(),
-                dbc.Row(
+                dbc.Spinner(dbc.Row(
                     [
                         dbc.Col(
                             [
-                                html.Div(id="Unp-table"),
+                                html.Div(id="Unp-table", children=[html.H3("Data"),html.Br(),
+                                            dash_table.DataTable(style_table={'overflowX': 'scroll'},
+                                                filter_action='native',
+                                                sort_action='native',
+                                                sort_mode='multi',
+                                                row_deletable=True,
+                                                column_selectable='single',
+                                                selected_columns=[],
+                                                selected_rows=[],
+                                                page_action='native',
+                                                page_current= 0,
+                                                page_size= 20,
+                                                style_data_conditional=[        
+                                                    {'if': {'row_index': 'odd'},
+                                                    'backgroundColor': 'rgb(248, 248, 248)'}
+                                                ],
+                                                id="datatable-data"
+                                                ),
+                                                html.Br(),
+                                                html.Div([
+                                                        html.Button('Discretize', id='btn', n_clicks=0),
+                                                        ],
+                                                        style={'verticalAlign': 'middle', 'display': 'inline'},
+                                                        className='text-center',
+                                                ),
+                                                html.Br(),html.Br(),
+                                ],hidden=True),
                             ]
                         ),
                     ]
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            [
-                               html.Div(id="Proc-table"),
-                            ]
-                        ),
-                    ]
-                ),
-                dbc.Row(
+                )),
+                dbc.Spinner(dbc.Row(
                     [
                         dbc.Col(
                             [
@@ -65,17 +82,20 @@ def layout():
                             ]
                         ),
                     ]
-                ),
+                )),
             ],                
         )
     ]
 
 @app.callback(
-    Output("Unp-table", "children"),
-    [Input("stored-data2", "data")],
-    prevent_initial_call=True
+    Output("datatable-data", "data"),
+    Output("datatable-data", "columns"),
+    Output("Unp-table", "hidden"),
+    [Input("stored-data2", "data"),
+     Input("stored-data", "data")],
+    #prevent_initial_call=True
 )
-def update_tabla(data):
+def update_table(data,data2):
     """
     It takes the data from the hidden div, and creates a dataframe from it. 
     Then it creates a table from the dataframe, and displays it. 
@@ -84,34 +104,13 @@ def update_tabla(data):
     :param data: The data to be displayed in the table.
     :return: A list of html elements.
     """
-    df=pd.DataFrame(data).copy()
-    return [html.H3("Unprocessed Data"),html.Div([dash_table.DataTable(data=df.to_dict('rows'), 
-                                            columns=[{"name": i, "id": i} for i in df.columns],
-                                            style_table={'overflowX': 'scroll'},
-                                            filter_action='native',
-                                            sort_action='native',
-                                            sort_mode='multi',
-                                            column_selectable='single',
-                                            selected_columns=[],
-                                            selected_rows=[],
-                                            page_action='native',
-                                            page_current= 0,
-                                            page_size= 20,
-                                            style_data_conditional=[        
-                                                {'if': {'row_index': 'odd'},
-                                                'backgroundColor': 'rgb(248, 248, 248)'}
-                                            ],
-                                            id="datatable-data"
-                        ),]),
-                html.Br(),   
-                html.Div([
-                    html.Button('Discretize', id='btn', n_clicks=0),
-                    ],
-                    style={'verticalAlign': 'middle', 'display': 'inline'},
-                    className='text-center',
-                ),  
-                html.Br(),html.Br(),  
-            ]
+    if data!=None:
+        if data2!=None:
+            df=pd.DataFrame(data2).copy()
+            return df.to_dict('rows'),[{"name": i, "id": i} for i in df.columns],False
+        else:
+            df=pd.DataFrame(data).copy()
+            return df.to_dict('rows'),[{"name": i, "id": i} for i in df.columns],False
 
 @app.callback(
     Output("leds", "children"),
@@ -169,35 +168,16 @@ def update_data(data):
         
 @app.callback(    
     Output("stored-data", "data"),
-    Output("datatable-data", "data"),
-    Output("Proc-table", "children"),
     [Input("btn", "n_clicks"),],
-    State("datatable-data", "data"),
+    State("stored-data2", "data"),
     prevent_initial_call=True
 )
 def update_data(btn,data):
-    if data!=None:
-        df=pd.DataFrame(data).copy()
-        df2=preprocess_data(df)
-        data=df2.to_dict('records')
-        return df2.to_dict('rows'),df2.to_dict('records'),[html.H3("Processed Data"),html.Div([dash_table.DataTable(data=df2.to_dict('rows'), 
-                                            columns=[{"name": i, "id": i, "deletable": True, 'renamable': True} for i in df.columns],
-                                            style_table={'overflowX': 'scroll'},
-                                            filter_action='native',
-                                            sort_action='native',
-                                            sort_mode='multi',
-                                            row_deletable=True,
-                                            column_selectable='single',
-                                            selected_columns=[],
-                                            selected_rows=[],
-                                            page_action='native',
-                                            page_current= 0,
-                                            page_size= 20,
-                                            style_data_conditional=[        
-                                                {'if': {'row_index': 'odd'},
-                                                'backgroundColor': 'rgb(248, 248, 248)'}
-                                            ],
-                                            id="datatable-data2"
-                        ),]),
-                html.Br(),     
-                ]
+    if data!=None :
+            df=pd.DataFrame(data).copy()
+            df2=preprocess_data(df)
+            return df2.to_dict('records')
+        
+
+
+                                                
