@@ -118,6 +118,13 @@ def update_table(data,data2):
     prevent_initial_call=True
 )
 def update_data(data):
+    """
+    If the data is not None, then create a dataframe from the data, and return a row of LED displays
+    with the number of records, variables, numeric variables, and categorical variables
+    
+    :param data: the dataframe
+    :return: A list of dbc.Row objects.
+    """
     if data!=None:
         df=pd.DataFrame(data).copy()
         return [dbc.Row(
@@ -173,6 +180,13 @@ def update_data(data):
     prevent_initial_call=True
 )
 def update_data(btn,data):
+    """
+    If the data is not None and the button has been clicked, then preprocess the data and return it.
+    
+    :param btn: the button that triggers the callback
+    :param data: the dataframe that is stored in the hidden div
+    :return: The dataframe is being returned as a dictionary.
+    """
     if data!=None and btn>0:
             df=pd.DataFrame(data).copy()
             df2=preprocess_data(df)

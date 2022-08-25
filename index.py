@@ -224,5 +224,6 @@ def display_page_content(pathname,data):
             return "404"
 
 
+# Running the app in a local server.
 if __name__ == "__main__":
     app.run_server(debug=True)
