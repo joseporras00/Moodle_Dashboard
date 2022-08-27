@@ -93,7 +93,7 @@ def update_data(contents, filename):
                 df = pd.read_csv(io.StringIO(decoded.decode("utf-8")), delimiter=r"\s+",header=0)
         except Exception as e:
             print(e)
-            return html.Div(["There was an error processing this file."])  
+            return None  
         
         return df.to_dict('records')
    

@@ -29,7 +29,7 @@ def layout():
             # A slider that allows you to select the train size of the model
             daq.Slider(
                 id = 'slider',
-                min=0,
+                min=10,
                 max=100,
                 value=30,
                 handleLabel={'showCurrentValue': True,'label': 'SPLIT'},
@@ -52,6 +52,7 @@ def layout():
             dcc.Dropdown(
                 id='select_independent',
                 multi=True,
+                clearable=False,
                 className='dcc_control',
             ),
             html.Br(),
@@ -59,7 +60,7 @@ def layout():
             html.P('Select number of splits', className='control_label'),
             daq.NumericInput(
                 id='id-splits',
-                min=1,
+                min=2,
                 max=10,
                 size = 75,
                 value=3

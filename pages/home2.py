@@ -14,8 +14,6 @@ from data_reader import *
 FONTSIZE = 20
 FONTCOLOR = '#F5FFFA'
 BGCOLOR ='#3445DB'
-# Reading the data from the csv file and storing it in a dataframe.
-df_prueba=read_data('data/moodle7numericos.csv')
 
 def layout():
     return [

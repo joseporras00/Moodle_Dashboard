@@ -100,11 +100,10 @@ app.layout = dbc.Container(
                             "textAlign": "center",
                             "margin": "10px",
                         },
-                        # Allow multiple files to be uploaded
                         multiple=False,
                     ),       
                 ]),
-                dbc.Alert(["The data to perform the funcionalities has not been added, upload them to continue"],
+                dbc.Alert(["The data to perform the funcionalities has not been added, load a file to continue"],
                                 id="alert-auto",
                                 is_open=False,
                                 dismissable=True,
@@ -149,7 +148,7 @@ def update_data(contents, filename):
                 df = pd.read_csv(io.StringIO(decoded.decode("utf-8")), delimiter=r"\s+",header=0)
         except Exception as e:
             print(e)
-            return html.Div(["There was an error processing this file."])  
+            return None
         
         
         return df.to_dict('records')
@@ -181,7 +180,7 @@ def display_page_content(pathname,data):
                 return [dbc.Modal(
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
-                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data uploaded"]),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data loaded"]),
                                 dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
                             ],
                             id="modal-fs",
@@ -196,7 +195,7 @@ def display_page_content(pathname,data):
                 return [dbc.Modal(
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
-                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data uploaded"]),
+                                dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data loaded"]),
                                 dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
                             ],
                             id="modal-fs",
@@ -224,6 +223,5 @@ def display_page_content(pathname,data):
             return "404"
 
 
-# Running the app in a local server.
 if __name__ == "__main__":
     app.run_server(debug=True)

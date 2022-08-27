@@ -1,7 +1,7 @@
 import dash
 import dash_bootstrap_components as dbc
 
-# This is the initialization of the Dash app.
+# Initializing the Dash app.
 app = dash.Dash(
     __name__,
     suppress_callback_exceptions=True,
