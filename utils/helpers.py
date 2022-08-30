@@ -30,10 +30,10 @@ def create_heatmap(df):
     :return: A figure object
     """
 
+    # Creating a heatmap figure.
     fig = go.Figure(data=go.Heatmap(
                        z=df.values.tolist(),
                        x=df.columns,
-                       #y=[classifier for classifier in df.index.values.tolist()],
                         y = df.index.values.tolist(),
                        hoverongaps = False,
                         xgap = 3,

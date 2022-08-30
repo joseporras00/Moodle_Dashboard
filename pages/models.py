@@ -18,6 +18,7 @@ server = app.server
 
 # A list of models that are used in the app.
 models = ['LGBM', 'Random Forest','SVC', 'KNN', 'GNB', 'DT','MLP', 'ADABoost','Logistic']
+# The style for the app.
 FONTSIZE = 20
 FONTCOLOR = '#F5FFFA'
 BGCOLOR ='#3445DB'
@@ -87,7 +88,7 @@ def layout():
             html.Br(),
 #--------------------------------------------------------------------------------------------------------------------
             html.Br(),
-            # The values of the metrics.
+            # Leds with the values of the metrics.
             dbc.Spinner(dbc.Row(
                 [
                 dbc.Col(
@@ -139,6 +140,7 @@ def layout():
             html.Br(),
 #--------------------------------------------------------------------------------------------
             # Graphs about the trained model
+            # A graph that shows the precission of the model.
             html.H5('Precission'),
             dbc.Spinner(html.Div(
                 [dcc.Graph(id='main_graph')],
@@ -147,6 +149,7 @@ def layout():
                 hidden=True,
             )),
             html.Br(),
+            # A graph that shows the confussion matrix of the model.
             html.H5('Confussion Matrix'),
             dbc.Spinner(html.Div(
                 [dcc.Graph(id='conf_matrix')],
@@ -155,6 +158,7 @@ def layout():
                 hidden=True,
             )),
             html.Br(),
+            # A card that shows the report of the model.
             dbc.Spinner([dbc.CardHeader("Report"),
                 dbc.CardBody(
                     [
@@ -213,6 +217,13 @@ def measurePerformance(data, target, independent, slider,splits, selected_models
     [Input("stored-data", "data")],
 )
 def update_optvariables(data):
+    """
+    The function takes the column names from the dataframe and 
+    returns them as the options and values for the dropdown
+    
+    :param data: the dataframe that is stored in the hidden div
+    :return: The values of the columns in the dataframe, except the last one.
+    """
     df=pd.DataFrame(data)
     values=df.columns[:-1].values
     return values,values

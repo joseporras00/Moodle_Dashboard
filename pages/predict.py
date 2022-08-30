@@ -46,6 +46,7 @@ def layout():
             html.Br(),
             html.Br(),
             dbc.Spinner(html.Div(id="predict-content")),
+            # A button that is hidden until the user uploads a file. It allows the user to download the predictions.
             html.Div(id='download-btn',
                      children=[dbc.Button(id='btn',
                         children=[html.I(className="fa fa-download mr-1"), "Download"],
@@ -55,6 +56,7 @@ def layout():
                     ],
                     hidden=True,
             ),
+            # A component that allows the user to download the data.
             dcc.Download(id="download-component"),
             ]
     ),
@@ -69,9 +71,6 @@ def update_data(contents, filename):
     """
     If the user uploads a file, the function will read the file and return a dictionary
     of the data. 
-    
-    If the user uploads a file that is not supported, the function will return an
-    error message
     
     :param contents: the contents of the uploaded file
     :param filename: The name of the uploaded file
@@ -117,26 +116,39 @@ def display(data):
         df=pd.DataFrame(data)
         df_1=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
         df_2=df_1.copy()
+        
+        # It loads the model from the server.
         model=joblib.load(open('./assets/my_model.joblib','rb'))
+        
+        # Loading the model.
         f_names=model.feature_names
+        # Making predictions.
         predictions=model.predict(df_2[f_names])
+        # Merging the predictions with the original data.
         df_pred = pd.DataFrame (predictions, columns = ['predicted'])
         df_merged = pd.concat([df, df_pred], axis=1, join='inner')
         return [html.H2("Predictions"),
                 html.Div(
                     dash_table.DataTable(data=df_merged.to_dict('records'), 
                                             columns=[{"name": i, "id": i} for i in df_merged.columns],
+                                            # Making the table not editable.
                                             editable=False,
+                                            # Making the table scrollable.
                                             style_table={'overflowX': 'scroll'},
+                                            # It allows the user to filter the data.
                                             filter_action='native',
+                                            # It allows the user to sort the data by multiple columns.
                                             sort_action='native',
                                             sort_mode='multi',
                                             column_selectable='single',
                                             selected_columns=[],
                                             selected_rows=[],
+                                            # t allows the user to navigate through the pages of the table.
                                             page_action='native',
                                             page_current= 0,
+                                            # The number of rows that will be displayed in the table.
                                             page_size= 20,
+                                            # Changing the background color of the odd rows.
                                             style_data_conditional=[        
                                                 {'if': {'row_index': 'odd'},
                                                 'backgroundColor': 'rgb(248, 248, 248)'}
@@ -154,8 +166,7 @@ def display(data):
 )
 def func(n_clicks,data):
     """
-    It takes the data from the table and converts it to a dataframe, then it returns the dataframe as a
-    downloadable csv file
+    It takes the data from the table and converts it to a downloadable csv file
     
     :param n_clicks: To perform the callback
     :param data: the dataframe you want to download

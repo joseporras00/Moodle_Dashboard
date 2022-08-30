@@ -17,73 +17,12 @@ import pandas as pd
 import plotly.express as px
 
 
+# A CSS file that is used to style the app.
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
+# A dictionary that contains the colors that are used in the app.
 colors = {"graphBackground": "#F5F5F5", "background": "#ffffff", "text": "#000000"}
-
-def makepie(labels,values,text):
-    """
-    It takes in three arguments, labels, values, and text, and returns a pie figure object
-    
-    :param labels: list of labels
-    :param values: A list of values for each slice of the pie
-    :param texto: the title of the pie chart
-    :return: A dictionary with the data and layout for a pie chart.
-    """
-    fig= go.figure = {
-            "data": [
-                {
-                "labels":labels,
-                "values":values,
-                "hoverinfo":"label+percent",
-                "hole": .7,
-                "type": "pie",
-                'marker': {'colors': [
-                    '#FB9C34',  
-                    '#F48E2C',
-                    '#F47C2B',
-                    '#EC7C2C'
-                    ]
-                    },
-                "showlegend": True
-            }],
-            "layout": {
-                "title" : dict(text =text,
-                          font =dict(
-                               size=20,
-                               color = 'black')),
-                "paper_bgcolor":"#white",
-                "showlegend":True,
-                'height':500,
-                'marker': {'colors': [
-                            '#FB9C34',  
-                            '#8C5C44',
-                            '#F47C2B',
-                            '#EC7C2C'
-                            ]
-                        },
-                "annotations": [
-                    {
-                    "font": {
-                        "size": 20
-                    },
-                    "showarrow": False,
-                    "text": "",
-                    "x": 0.2,
-                    "y": 0.2
-                    }
-                ],
-                "showlegend": True,
-                "legend":dict(fontColor="white",tickfont={'color':'white' }),
-                "legenditem": {
-                    "textfont": {
-                        'color':'white'
-                    }
-                }
-    } }
-    return fig
-    
-
+  
 def layout():
     return [
         html.Div(
@@ -105,7 +44,7 @@ def layout():
                         ]),
                     ]),              
                     dbc.Col([
-                        # A dropdown menu that allows you to select a variable.
+                        # A dropdown menu that allows you to select a variable of the data.
                         html.H5('Select a variable'),
                         dcc.Dropdown(id='variable-dropdown',
                             multi=False,
@@ -149,7 +88,7 @@ def layout():
 def update_graph(data,course):
     """
     It takes a dataframe, a column name, and a value, and returns a pie chart of the counts of the
-    values in the column
+    values in the column 'mark'
     
     :param data: the dataframe that contains the data
     :param curso: the course name
@@ -158,6 +97,8 @@ def update_graph(data,course):
     df = pd.DataFrame(data)
     col_label = "mark"
     col_values = "Count"
+    
+    # Filtering the dataframe by the course number.
     if(course !=None):
         df = df[df['course'].isin([course])]
         v=df[col_label].value_counts()
@@ -171,7 +112,9 @@ def update_graph(data,course):
             col_label: v.index,
             col_values: v.values
         })
-    fig = makepie(new2['mark'],new2['Count'],'Distribucion de notas')
+        
+    # Creating a pie chart
+    fig = makepie(new2['mark'],new2['Count'],'Marks Distribution')
     
     return fig
 
@@ -192,20 +135,26 @@ def update_table(data):
 
     table = html.Div(
         [
-            html.H5('Datos:'),
+            html.H5('Data:'),
             dash_table.DataTable(
                 data=df.to_dict('rows'), 
                 columns=[{"name": i, "id": i} for i in df.columns],
+                # Making the table scrollable.
                 style_table={'overflowX': 'scroll'},
+                # It allows you to filter the data in the table.
                 filter_action='native',
+                # It allows you to sort the data in the table by clicking on the column name.
                 sort_action='native',
                 sort_mode='multi',
                 column_selectable='single',
                 selected_columns=[],
                 selected_rows=[],
+                # It allows you to navigate through the pages of the table.
                 page_action='native',
                 page_current= 0,
+                # Setting the number of rows that are displayed in the table.
                 page_size= 20,
+                # Changing the background color of the odd rows in the table.
                 style_data_conditional=[        
                     {'if': {'row_index': 'odd'},
                     'backgroundColor': 'rgb(248, 248, 248)'}
@@ -231,7 +180,7 @@ def update_optcourse(data):
     The list of dictionaries is sorted alphabetically
     
     :param data: the dataframe that contains the data that you want to use to update the dropdown
-    :return: A list of dictionaries.
+    :return: A list of dictionaries about the courses.
     """
     df=pd.DataFrame(data)
     return [{'label':x, 'value':x} for x in sorted(df['course'].unique())]
@@ -242,6 +191,14 @@ def update_optcourse(data):
     [Input("stored-data", "data")],
 )
 def update_optvariables(data):
+    """
+    The function returns the column names of the dataframe as the options for the dropdown 
+    and the second column name as the default value
+    
+    :param data: the dataframe that is stored in the hidden div
+    :return: The first value is the list of options for the dropdown. The second value is the default
+    value for the dropdown.
+    """    
     df=pd.DataFrame(data)
     return df.columns.values,df.columns.values[1]
 
@@ -263,6 +220,8 @@ def update_bar(data,course,variable):
     df = pd.DataFrame(data)
     col_label = variable
     col_values = "Count"
+    
+    # Filtering the dataframe by the course name.
     if(course !=None):
         df = df[df['course'].isin([course])]
         v=df[col_label].value_counts()
@@ -276,7 +235,9 @@ def update_bar(data,course,variable):
             col_label: v.index,
             col_values: v.values
         })
-    fig = makepie(new2[col_label],new2[col_values],'Distribucion de: '+col_label)
+        
+    # Creating a pie chart.
+    fig = makepie(new2[col_label],new2[col_values],col_label+' distribution: ')
     
     return fig
 
@@ -294,10 +255,14 @@ def update_matrix(data,course):
     :return: A figure object
     """
     df = pd.DataFrame(data)    
+    
+    # Filtering the dataframe by the course name.
     if(course !=None):
         df = df[df['course'].isin([course])]
     df=df.iloc[:,1:]    
     labels=df.columns
+    
+    # Creating a scatter matrix plot.
     fig = px.scatter_matrix(df, dimensions=labels,width=1150,height=1150)
     fig.update_yaxes(automargin=True)
     fig.update_xaxes(automargin=True)

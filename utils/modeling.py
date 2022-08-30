@@ -31,6 +31,7 @@ def make_gridSearch(model,X,y,splits):
     :return: The best estimator from the grid search.
     """
     param_grid={}
+    #Assigning the model, and it also assigning the parameters for the model.
     if model == 'GNB':
         model = GaussianNB()
         
@@ -73,6 +74,7 @@ def make_gridSearch(model,X,y,splits):
                      'learning_rate' : [1.,0.8,0.5],'algorithm' : ['SAMME','SAMME.R']}
         model = AdaBoostClassifier()
             
+    # Using the GridSearchCV function to find the best parameters for the model.
     grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=splits, verbose=True)
     grid_search.fit(X,y)
     final_model = grid_search.best_estimator_
@@ -82,7 +84,7 @@ def make_gridSearch(model,X,y,splits):
 def buildModel(df2, y_v, X_v,slider,splits, model):
         """
         It takes a dataframe, a list of features, a list of target variables, a slider value, a number of
-        splits for the cross validation, and a model, and returns a bunch of metrics and figures
+        splits for the cross validation, and a model, and returns the result metrics and figures
         
         :param df2: the dataframe that contains the data
         :param y_v: The name of the column that contains the target variable
@@ -92,31 +94,39 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
         :param model: the model to be trained
         :return: the precision, recall, accuracy, f1, fig_precision, fig_m, reporte
         """
-        df=df2
+        # Replacing the values of the data to numeric.
+        df=df2.copy()
         df=df.replace({'LOW': 0, 'MEDIUM':1, 'HIGH':2})
+        # Taking the columns from the dataframe that are in the list X_v and y_v, and assigning them to X and y.
         X=df[X_v]
         y=df[y_v]  
         
+        # Using the function make_gridSearch to find the best parameters for the model.
         model=make_gridSearch(model,X,y,splits)   
         
+        # Splitting the data into training and testing data.
         trainX, testX, trainy, testy = train_test_split(X, y, train_size= slider/100)  
         model.feature_names=list(X_v)
         
+        # Predicting the probability of the model.
         lr_probs = model.predict_proba(testX)
-        yhat = model.predict(testX)            
-            
-        lr_probs = lr_probs[:, 1]              
+        lr_probs = lr_probs[:, 1] 
+        # Predicting the values of the target variable for the test data.
+        yhat = model.predict(testX)                         
                 
+        # Creating a histogram of the predicted probabilities.
         fig_precision = px.histogram(
                 x = lr_probs, color=testy, nbins=50,
                 labels=dict(color='True Labels', x='Score')
         )
-        
+                
+        # Calculating the metrics of the model.
         precision=round(precision_score(testy, yhat,average='micro'),2)
         recall=round(recall_score(testy, yhat,average='micro'),2)
         accuracy=round(accuracy_score(testy, yhat)*100,1)
         f1=round(f1_score(testy, yhat,average='micro'),2)
                 
+        # Creating a confusion matrix and a heatmap of the confusion matrix.
         confusion_m=confusion_matrix(testy, yhat)
         fig_m = go.Figure(data=go.Heatmap(
                        z=confusion_m,
@@ -127,11 +137,12 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
                         ygap = 3,
                         colorscale=[[0.0, 'rgb(165,0,38)'], [0.1111111111111111, 'rgb(215,48,39)'], [0.2222222222222222, 'rgb(244,109,67)'], [0.3333333333333333, 'rgb(253,174,97)'], [0.4444444444444444, 'rgb(254,224,144)'], [0.5555555555555556, 'rgb(224,243,248)'], [0.6666666666666666, 'rgb(171,217,233)'], [0.7777777777777778, 'rgb(116,173,209)'], [0.8888888888888888, 'rgb(69,117,180)'], [1.0, 'rgb(49,54,149)']]
                         ),
-                       )
-                
+                       )                
         
+        # Saving the model in the server.
         export_model(model)
         
+        # Creating a classification report for the model.
         reporte=classification_report(testy, yhat,target_names=['FAIL', 'PASS', 'GOOD', 'EXCELLENT'])
                 
         return precision, recall, accuracy, f1, fig_precision, fig_m, reporte
@@ -139,9 +150,9 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
     
 def export_model(model):
     """
-    It takes a model as input, and saves it to a file called my_model.joblib in the assets folder
+    It saves a model in the server
     
-    :param model: The model to be exported
+    :param model: The model to be saved
     """
     joblib.dump(model, open('./assets/my_model.joblib', 'wb'))
            

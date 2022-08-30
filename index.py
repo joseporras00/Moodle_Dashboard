@@ -41,11 +41,13 @@ app.layout = dbc.Container(
                         dbc.Row(
                             [
                             dbc.Col(
+                                # Creating an image with the logo of the app.
                                 html.Img(
                                     src=app.get_asset_url("logo_moodle.png"), height="80px"
                                     )
                                 ),
                             dbc.Col(
+                                # Creating a brand for the navbar.
                                 dbc.NavbarBrand(
                                     "Moodle Dashboard", className="ms-2"
                                 )
@@ -62,6 +64,7 @@ app.layout = dbc.Container(
                         dbc.Collapse(
                             dbc.Nav(
                                 [                                    
+                                    # The pages of the app.
                                     dbc.NavItem(dbc.NavLink("Home", href=app.get_relative_path("/"))),
                                     dbc.NavItem(dbc.NavLink("Dashboard", href=app.get_relative_path("/dash"))),
                                     dbc.NavItem(dbc.NavLink("Train models", href=app.get_relative_path("/train"))),
@@ -80,7 +83,7 @@ app.layout = dbc.Container(
                 ],
                 
             ),
-            # A component that allows to store data in the whole the app.
+            # Components that allow to store data in the whole the app.
             dcc.Store(id='stored-data',data=None,storage_type='session'),
             dcc.Store(id='stored-data2',data=None,storage_type='session'),
             #BODY
@@ -103,6 +106,7 @@ app.layout = dbc.Container(
                         multiple=False,
                     ),       
                 ]),
+                # A component that shows a message to the user about the data file.
                 dbc.Alert(["The data to perform the funcionalities has not been added, load a file to continue"],
                                 id="alert-auto",
                                 is_open=False,
@@ -122,7 +126,7 @@ app.layout = dbc.Container(
 )
 def update_data(contents, filename):
     """
-    It takes the contents of the uploaded file and converts it to a pandas dataframe. 
+    It takes the contents of the uploaded file and converts it to a dataframe. 
     
     The dataframe is then converted to a dictionary to be returned. 
     
@@ -170,14 +174,14 @@ def display_page_content(pathname,data):
         path = app.strip_relative_path(pathname)
         if not path:
             if data!=None:
-                return pages.home2.layout(), False, False
+                return pages.home.layout(), False, False
             else:
-                return pages.home2.layout(), False, True
+                return pages.home.layout(), False, True
         elif path == "dash":
             if data!=None:
                 return pages.dashboard.layout(), True, False
             else:
-                return [dbc.Modal(
+                return [dbc.Modal(# A modal that is shown when the user tries to access the page without having uploaded a data file.
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
                                 dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data loaded"]),
@@ -192,8 +196,8 @@ def display_page_content(pathname,data):
             if data!=None:
                 return pages.models.layout(), True , False
             else:
-                return [dbc.Modal(
-                            [
+                return [dbc.Modal( # A modal that is shown when the user tries to access the page without having uploaded a data file.
+                            [ 
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
                                 dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No data loaded"]),
                                 dbc.ModalFooter(dbc.Button([dcc.Link('Go back to home', href='/',style={'color': 'white'}),])),
@@ -204,10 +208,11 @@ def display_page_content(pathname,data):
                             backdrop="static",
                         ),], False, False
         elif path == "predict":
+            # Checking if exists a model in the server. If it does, it returns the predict page.
             if os.path.exists('assets/my_model.joblib')==True:
                 return pages.predict.layout(), True, False
             else:
-                return [dbc.Modal(
+                return [dbc.Modal(# A modal that is shown when the user tries to access the page without a model in the server.
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("ERROR"),close_button=False),
                                 dbc.ModalBody([html.I(className="bi bi-exclamation-circle fa-2x"),"  No model on the server to make predictions..",
@@ -223,5 +228,6 @@ def display_page_content(pathname,data):
             return "404"
 
 
+# A way to run the app in a local server.
 if __name__ == "__main__":
     app.run_server(debug=True)
