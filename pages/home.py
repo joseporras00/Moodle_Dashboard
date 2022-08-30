@@ -197,8 +197,4 @@ def update_data(btn,data):
     if data!=None and btn>0:
             df=pd.DataFrame(data).copy()
             df2=preprocess_data(df)
-            return df2.to_dict('records')
-        
-
-
-                                                
+            return df2.to_dict('records')                               
