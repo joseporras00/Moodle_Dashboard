@@ -37,7 +37,7 @@ def make_gridSearch(model,X,y,splits):
         
     elif model == 'SVC':
         param_grid = {'kernel': ['rbf', 'linear'], 'gamma': [1e-3, 1e-4],'C': [1, 10, 100, 1000]}
-        model = SVC()
+        model = SVC(probability=True)
         
     elif model == 'LGBM':
         param_grid = {'learning_rate': [0.005, 0.01],'n_estimators': [8,16,24],'num_leaves': [6,8,12,16], 

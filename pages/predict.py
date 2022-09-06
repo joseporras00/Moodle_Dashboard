@@ -90,6 +90,7 @@ def update_data(contents, filename):
             elif "txt" or "tsv" in filename:
                # Assume that the user upl, delimiter = r'\s+'oaded an excel file
                 df = pd.read_csv(io.StringIO(decoded.decode("utf-8")), delimiter=r"\s+",header=0)
+            df=preprocess_data(df)
         except Exception as e:
             print(e)
             return None  
