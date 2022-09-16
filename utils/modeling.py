@@ -100,7 +100,7 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
         # Taking the columns from the dataframe that are in the list X_v and y_v, and assigning them to X and y.
         X=df[X_v]
         y=df[y_v]  
-        
+        target_names=df['mark'].unique()
         # Using the function make_gridSearch to find the best parameters for the model.
         model=make_gridSearch(model,X,y,splits)   
         
@@ -130,8 +130,8 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
         confusion_m=confusion_matrix(testy, yhat)
         fig_m = go.Figure(data=go.Heatmap(
                        z=confusion_m,
-                       x=['FAIL', 'PASS', 'GOOD', 'EXCELLENT'],
-                       y =['FAIL', 'PASS', 'GOOD', 'EXCELLENT'],
+                       x=target_names,
+                       y =target_names,
                        hoverongaps = False,
                         xgap = 3,
                         ygap = 3,
@@ -143,7 +143,7 @@ def buildModel(df2, y_v, X_v,slider,splits, model):
         export_model(model)
         
         # Creating a classification report for the model.
-        reporte=classification_report(testy, yhat,target_names=['FAIL', 'PASS', 'GOOD', 'EXCELLENT'])
+        reporte=classification_report(testy, yhat,target_names=target_names)
                 
         return precision, recall, accuracy, f1, fig_precision, fig_m, reporte
     
