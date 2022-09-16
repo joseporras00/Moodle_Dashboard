@@ -32,4 +32,8 @@ def preprocess_data(df):
     df_merged = pd.concat([df.iloc[:,0], df2, df.iloc[:,-1]], axis=1, join='inner')
     df_merged=df_merged.replace({0:'LOW', 1:'MEDIUM', 2:'HIGH'})
     return pd.DataFrame(df_merged)
+import pandas as pd
+df = pd.read_csv('moodle_numerico.csv.txt',header=0)
+df=df.replace({'GOOD':'PASS', 'EXCELLENT':'PASS'})
+df.to_csv('moodle_binary.csv', index=False)
 
